@@ -1,7 +1,7 @@
 ###IMPORT DATA TO DATA FOLDER IN YOUR COMPUTER
 install.packages("readxl")
 library(readxl)
-#commit
+#commit ok
 
 #Bacteria IAA and P concentrations
 xl_1 <- "https://dfzljdn9uc3pi.cloudfront.net/2020/9005/1/DatasetS1_Raw_Data__Screening__P_solubilization_and_IAA_production.xlsx"
