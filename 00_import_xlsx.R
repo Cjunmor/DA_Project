@@ -4,11 +4,12 @@ install.packages("gdata")
 library(readxl)
 library(gdata)
 
-
+#sdgf
 
 xl_1 <- "https://dfzljdn9uc3pi.cloudfront.net/2020/9005/1/DatasetS1_Raw_Data__Screening__P_solubilization_and_IAA_production.xlsx"
 xl_2 <- "https://dfzljdn9uc3pi.cloudfront.net/2020/9005/1/Raw_Data_Greenhouse_tests.xlsx"
-download.file(xl_2, "Data/Data_GH.xlsx")
+download.file(xl_2, "Data/Data_GH.xls", mode = "wb")
+download.file()
 data_s1<- readxl::read_excel(Webcsv, sheet = 1)
  
 
