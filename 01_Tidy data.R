@@ -22,6 +22,8 @@ D1_s1 <- D1_s1 %>%
 D1_s2 <- D1_s2 %>%
   fill(`LSM strain`)
 
+  #Merge the 2 dataframes
+D1 <- # add column
 
 #Green House morphological trait measures
 
@@ -45,3 +47,6 @@ D_S$Cropname <- "Soybean"
 
   #Eliminate N Soil (%) column from D_S
 D_S <- D_S[-which(names(D_S) == "N Soil (%)")] # - (eliminate) which column name in D_S is N Soil (%) (column 8)
+
+  #Merge the 3 dataframes
+D_GH <- union(D_B, D_M, D_S) #check 2 lines between each merged dataframe
