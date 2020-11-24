@@ -1,10 +1,12 @@
 ### TIDYING THE DATAFRAMES ###
 
+# install.packages("dplyr")
 # install.packages("readxl")
 # install.packages("tidyr")
 
 library(readxl)
 library(tidyr)
+library(dplyr)
 
 #Bacteria IAA and P concentrations
 
@@ -36,3 +38,10 @@ D_M <- D_M %>%
 D_S <- D_S %>%
   fill (`Treatments (strains)`)
 
+  #Adding the crop name column
+D_B$Cropname <- "Bean"
+D_M$Cropname <- "Maize"
+D_S$Cropname <- "Soybean"
+
+  #Eliminate N Soil (%) column from D_S
+D_S <- D_S[-which(names(D_S) == "N Soil (%)")] # - (eliminate) which column name in D_S is N Soil (%) (column 8)
