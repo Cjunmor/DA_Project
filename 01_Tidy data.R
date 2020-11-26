@@ -13,7 +13,6 @@ library(dplyr)
 #readxl::excel_sheets("Data/Data_1.xlsx")  To check the sheet names
 D1_s1<- readxl::read_excel("Data/Data_1.xlsx", sheet = 1)
 D1_s2<- readxl::read_excel("Data/Data_1.xlsx", sheet = 2)
-as.data.frame(D1_s1)
 
   #Filling in the LSM strain column
 D1_s1 <- D1_s1 %>%
@@ -23,7 +22,9 @@ D1_s2 <- D1_s2 %>%
   fill(`LSM strain`)
 
   #Merge the 2 dataframes
-D1 <- # add column
+IAA_pg <- D1_s2$`µg AIA/ g biomass`
+D1 <- cbind.data.frame(D1_s1, IAA_pg)
+names(D1)[names(D1) == "IAA_pg"] <- "µg IAA/ g biomass" #rename IAA column
 
 #Green House morphological trait measures
 
@@ -48,5 +49,11 @@ D_S$Cropname <- "Soybean"
   #Eliminate N Soil (%) column from D_S
 D_S <- D_S[-which(names(D_S) == "N Soil (%)")] # - (eliminate) which column name in D_S is N Soil (%) (column 8)
 
+  #Eliminate last two rows
+D_B <- head(D_B, -2)
+D_M <- head(D_M, -2)
+D_S <- head(D_S, -2)
+
   #Merge the 3 dataframes
-D_GH <- union(D_B, D_M, D_S) #check 2 lines between each merged dataframe
+D_GH <- union(D_B, D_M) #check 2 lines between each merged dataframe, union_all for duplicates not to be removed
+D_GH <- union(D_GH, D_S)
