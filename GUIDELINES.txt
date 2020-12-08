@@ -39,3 +39,5 @@ http://genoplotr.r-forge.r-project.org/pdfs/genoPlotR.pdf
 https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/index.html
 
 7) PREPARE THE RMARKDOWN WITH OUR RESULTS
+
+Just practicing 
