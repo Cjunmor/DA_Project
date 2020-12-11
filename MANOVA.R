@@ -2,17 +2,37 @@
 
 #install.packages("compositions")
 library(compositions)
-#bind all the dependent variables that will be used in a single object
 
-bind_all <- cbind(D_GH$`Plant high (Mean - cm)`,D_GH$`Shoot dry mass (g)`,D_GH$`Root dry mass (g)`,D_GH$`Total dry mass (g)`, D_GH$`P Soil (mg/dm3)`,D_GH$`P Shoot g/kg`, D_GH$`P Roots g/kg`, D_GH$`N Shoot g/kg`, D_GH$`N Roots g/kg`)
+##----TWO WAY MANOVA with ALL the dependent variables-----
 
-manova_all <- manova(ilr(clo(bind_all)) ~ D_GH$`Treatments (strains)`*D_GH$Cropname, data = D_GH)
+manova_all <- manova(ilr(clo(D_GH[3:11])) ~ D_GH$`Treatments (strains)`*D_GH$Cropname, data = D_GH)
 
 summary(manova_all)
 summary(manova_all, test= "Hotelling-Lawley")
 summary(manova_all, test= "Roy")
 summary(manova_all, test= "Wilks")
 
-bind_bean <-  cbind(D_Bean$`Plant high (Mean - cm)`,D_Bean$`Shoot dry mass (g)`,D_Bean$`Root dry mass (g)`,D_Bean$`Total dry mass (g)`)
+##---- ONE WAY MANOVA with ALL the dependent vaiables BEAN----
+manova_bean <- manova(ilr(clo(D_Bean[3:11])) ~ D_Bean$`Treatments (strains)`)
 
+summary(manova_bean)
+summary(manova_bean, test= "Hotelling-Lawley")
+summary(manova_bean, test= "Roy")
+summary(manova_bean, test= "Wilks")
+
+##---- ONE WAY MANOVA with ALL the dependent vaiables MAIZE----
+manova_maize <- manova(ilr(clo(D_Maize[3:11])) ~ D_Maize$`Treatments (strains)`)
+
+summary(manova_maize)
+summary(manova_maize, test= "Hotelling-Lawley")
+summary(manova_maize, test= "Roy")
+summary(manova_maize, test= "Wilks")
+
+##---- ONE WAY MANOVA with ALL the dependent vaiables SOYBEAN----
+manova_soy <- manova(ilr(clo(D_Soy[3:11])) ~ D_Soy$`Treatments (strains)`)
+
+summary(manova_soy)
+summary(manova_soy, test= "Hotelling-Lawley")
+summary(manova_soy, test= "Roy")
+summary(manova_soy, test= "Wilks")
 
