@@ -43,62 +43,64 @@ Tukey.Bean11$groups
 
 
 
+Tukey.Soy3=HSD.test(anovasoy3,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy3$groups
+Tukey.Soy4=HSD.test(anovasoy4,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy4$groups
+Tukey.Soy5=HSD.test(anovasoy5,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy5$groups
+Tukey.Soy6=HSD.test(anovasoy6,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy6$groups
+Tukey.Soy10=HSD.test(anovasoy10,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy10$groups
+Tukey.Soy11=HSD.test(anovasoy11,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy11$groups
 
-out=HSD.test(anovasoy3,"D_Soy[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovasoy4,"D_Soy[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovasoy5,"D_Soy[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovasoy6,"D_Soy[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovasoy10,"D_Soy[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovasoy11,"D_Soy[[1]]", group=TRUE, alpha=0.05)
-out$groups
+Tukey.Maize3=HSD.test(anovamaize3,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize3$groups
+Tukey.Maize4=HSD.test(anovamaize4,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize4$groups
+Tukey.Maize5=HSD.test(anovamaize5,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize5$groups
+Tukey.Maize6=HSD.test(anovamaize6,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize6$groups
+Tukey.Maize10=HSD.test(anovamaize10,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize10$groups
+Tukey.Maize11=HSD.test(anovamaize11,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize11$groups
 
-out=HSD.test(anovamaize3,"D_Maize[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovamaize4,"D_Maize[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovamaize5,"D_Maize[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovamaize6,"D_Maize[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovamaize10,"D_Maize[[1]]", group=TRUE, alpha=0.05)
-out$groups
-out=HSD.test(anovamaize11,"D_Maize[[1]]", group=TRUE, alpha=0.05)
-out$groups
+
 
 
 ### DUNCAN
-out2 <- duncan.test(anovasoy3,"D_Soy[[1]]")
-out2$groups
-out2 <- duncan.test(anovasoy4,"D_Soy[[1]]")
-out2$groups
-out2 <- duncan.test(anovasoy5,"D_Soy[[1]]")
-out2$groups
-out2 <- duncan.test(anovasoy6,"D_Soy[[1]]")
-out2$groups
-out2 <- duncan.test(anovasoy10,"D_Soy[[1]]")
-out2$groups
-out2 <- duncan.test(anovasoy11,"D_Soy[[1]]")
-out2$groups
+Duncan.Soy3 <- duncan.test(anovasoy3,"D_Soy[[1]]")
+Duncan.Soy3$groups
+Duncan.Soy4 <- duncan.test(anovasoy4,"D_Soy[[1]]")
+Duncan.Soy4$groups
+Duncan.Soy5 <- duncan.test(anovasoy5,"D_Soy[[1]]")
+Duncan.Soy5$groups
+Duncan.Soy6 <- duncan.test(anovasoy6,"D_Soy[[1]]")
+Duncan.Soy6$groups
+Duncan.Soy10 <- duncan.test(anovasoy10,"D_Soy[[1]]")
+Duncan.Soy10$groups
+Duncan.Soy11 <- duncan.test(anovasoy11,"D_Soy[[1]]")
+Duncan.Soy11$groups
 
-out2 <- duncan.test(anovabean3,"D_Bean[[1]]")
-out2$groups
-out2 <- duncan.test(anovabean4,"D_Bean[[1]]")
-out2$groups
-out2 <- duncan.test(anovabean5,"D_Bean[[1]]")
-out2$groups
-out2 <- duncan.test(anovabean6,"D_Bean[[1]]")
-out2$groups
-out2 <- duncan.test(anovabean9,"D_Bean[[1]]")
-out2$groups
-out2 <- duncan.test(anovabean10,"D_Bean[[1]]")
-out2$groups
-out2 <- duncan.test(anovabean11,"D_Bean[[1]]")
-out2$groups
+Duncan.Bean3 <- duncan.test(anovabean3,"D_Bean[[1]]")
+Duncan.Bean3$groups
+Duncan.Bean4 <- duncan.test(anovabean4,"D_Bean[[1]]")
+Duncan.Bean4$groups
+Duncan.Bean5 <- duncan.test(anovabean5,"D_Bean[[1]]")
+Duncan.Bean5$groups
+Duncan.Bean6 <- duncan.test(anovabean6,"D_Bean[[1]]")
+Duncan.Bean6$groups
+Duncan.Bean9 <- duncan.test(anovabean9,"D_Bean[[1]]")
+Duncan.Bean9$groups
+Duncan.Bean10 <- duncan.test(anovabean10,"D_Bean[[1]]")
+Duncan.Bean10$groups
+Duncan.Bean11 <- duncan.test(anovabean11,"D_Bean[[1]]")
+Duncan.Bean11$groups
+
 
 out2 <- duncan.test(anovamaize3,"D_Maize[[1]]")
 out2$groups
