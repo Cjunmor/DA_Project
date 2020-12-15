@@ -36,7 +36,7 @@ nortest::lillie.test(D_Phosphorus$P_pg)
 #Instead the null hypothesis to be tested is very general and usually assumes that the two populations are equal (in terms of their central tendency)
 kruskal_test(D_IAA, IAA_pg ~ LSM_strain)
 #p = 0.00000239 
-kr <- agricolae::kruskal(D_IAA[2], D_IAA[1], alpha = 0.05, p.adj ="bonferroni", group=TRUE)
+kr <- agricolae::kruskal(D_IAA[2], D_IAA[1], alpha = 0.05, p.adj ="holm", group=TRUE)
 kr #groups get created
 
 ##Post-hoc comparison, Dunn test

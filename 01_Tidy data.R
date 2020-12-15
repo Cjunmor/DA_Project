@@ -10,9 +10,9 @@ library(dplyr)
 
 #Bacteria IAA and P concentrations
 
-#readxl::excel_sheets("Data/Data_1.xlsx")  To check the sheet names
-D_Phosphorus<- readxl::read_excel("Data/Data_1.xlsx", sheet = 1)
-D_IndolA<- readxl::read_excel("Data/Data_1.xlsx", sheet = 2)
+#readxl::excel_sheets("Data/Data.xlsx")  To check the sheet names
+D_Phosphorus<- readxl::read_excel("Data/Data.xlsx", sheet = 1)
+D_IndolA<- readxl::read_excel("Data/Data.xlsx", sheet = 2)
 
   #Filling in the LSM strain column
 D_Phosphorus <- D_Phosphorus %>%
@@ -24,7 +24,7 @@ D_IndolA <- D_IndolA %>%
   #Merge the 2 dataframes
 IAA_pg <- D_IndolA$`µg AIA/ g biomass`
 D_Biochem <- cbind.data.frame(D_Phosphorus, IAA_pg)
-names(D_Biochem)[names(D_Biochem) == "IAA_pg"] <- "µg IAA/ g biomass" #rename IAA column
+names(D_Biochem)[names(D_Biochem) == "µg P/ g biomass"] <- "P_pg" #rename µg P/ g biomass column
 
 #Green House morphological trait measures
 
