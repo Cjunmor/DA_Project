@@ -125,7 +125,7 @@ bartlett.test(D_Soy[[6]]~D_Soy[[1]], data = D_Soy)
 bartlett.test(D_Soy[[10]]~D_Soy[[1]], data = D_Soy)
 bartlett.test(D_Soy[[11]]~D_Soy[[1]], data = D_Soy)
 
-####
+##### shakira
 
 
 #FIRST, NORMALITY MUST BE TESTED
