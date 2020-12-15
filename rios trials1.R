@@ -101,19 +101,19 @@ Duncan.Bean10$groups
 Duncan.Bean11 <- duncan.test(anovabean11,"D_Bean[[1]]")
 Duncan.Bean11$groups
 
+Duncan.Maize3 <- duncan.test(anovamaize3,"D_Maize[[1]]")
+Duncan.Maize3$groups
+Duncan.Maize4 <- duncan.test(anovamaize4,"D_Maize[[1]]")
+Duncan.Maize4$groups
+Duncan.Maize5 <- duncan.test(anovamaize5,"D_Maize[[1]]")
+Duncan.Maize5$groups
+Duncan.Maize6 <- duncan.test(anovamaize6,"D_Maize[[1]]")
+Duncan.Maize6$groups
+Duncan.Maize10 <- duncan.test(anovamaize10,"D_Maize[[1]]")
+Duncan.Maize10$groups
+Duncan.Maize11 <- duncan.test(anovamaize11,"D_Maize[[1]]")
+Duncan.Maize11$groups
 
-out2 <- duncan.test(anovamaize3,"D_Maize[[1]]")
-out2$groups
-out2 <- duncan.test(anovamaize4,"D_Maize[[1]]")
-out2$groups
-out2 <- duncan.test(anovamaize5,"D_Maize[[1]]")
-out2$groups
-out2 <- duncan.test(anovamaize6,"D_Maize[[1]]")
-out2$groups
-out2 <- duncan.test(anovamaize10,"D_Maize[[1]]")
-out2$groups
-out2 <- duncan.test(anovamaize11,"D_Maize[[1]]")
-out2$groups
 
 
 
