@@ -4,7 +4,7 @@ library(agricolae)
 
 #### forget these theyre just random tryouts
 ##install.packages("rstatix")
-##library(rstatix)
+##library(rstatix) bh 
 ##install.packages("datarium")
 ##library(datarium)
 ##anovasoy3 <- aov(D_Soy[[3]]~D_Soy[[1]], data = D_Soy)
