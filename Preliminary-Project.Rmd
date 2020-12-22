@@ -1,0 +1,602 @@
+---
+title: "PROJECT"
+author: "Carolina Juncá, Riyad Hilal and Ignacio Romero"
+date: "15/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+In this project, we re-analyse the results obtained by Baron et al. in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](PeerJ 8:e9005 DOI 10.7717/peerj.9005) using RStudio. The authors test the permormances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms. 
+
+First, their IAA and P solubilization is tested in order to adress the more appropriate strains to be tested in green house experiment. 
+
+After that, the second part consists in the test of plan-growth related parametres in presence of the strains chosen in the first part. 
+
+The packages used are the next: 
+
+```{r Packages used, echo=TRUE, include = FALSE}
+#install.packages("agricolae")
+library(agricolae)
+#install.packages("lmtest")
+library(lmtest)
+#install.packages("ggplot2")
+library(ggplot2)
+#install.packages("rstatix")
+library (rstatix)
+#install.packages("nortest")
+library (nortest)
+#install.packages("BBmisc")
+library(BBmisc)
+# install.packages("dplyr")
+library(dplyr)
+# install.packages("readxl")
+library(readxl)
+# install.packages("tidyr")
+library(tidyr)
+```
+
+## Objectives
+
+1. Redo the statistical analysis from the article with R instead of AGROESTAT.
+  a. F and Tukey test for the stain P and IAA values
+  b. F and Duncan test for the Greenhouse data
+2. Carry out a Principal Components Analysis (PCA) in order to characterize the data.
+3.  Find correlations between fungi strain and plant species.
+
+### Data download and "Data" folder creation
+```{r}
+#Creating the folder "Data" if it doesn't exist
+D <- "Data"
+if (!dir.exists(D)) dir.create(D)
+
+#Bacteria IAA and P concentrations
+xl_1 <- "https://dfzljdn9uc3pi.cloudfront.net/2020/9005/1/DatasetS1_Raw_Data__Screening__P_solubilization_and_IAA_production.xlsx"
+download.file(xl_1, "Data/Data.xlsx", mode = "wb")
+
+#Green House morphological trait measures
+xl_2 <- "https://dfzljdn9uc3pi.cloudfront.net/2020/9005/1/Raw_Data_Greenhouse_tests.xlsx"
+download.file(xl_2, "Data/Data_GH.xlsx", mode = "wb")
+```
+
+
+## Part one: Data organisation
+
+In this part, the data are transformed and organized in order to allow the use of RStudio. 
+
+```{r Data organisation, echo = TRUE}
+
+#Bacteria IAA and P concentrations
+
+#readxl::excel_sheets("Data/Data.xlsx")  To check the sheet names
+D_Phosphorus<- readxl::read_excel("Data/Data.xlsx", sheet = 1)
+D_IndolA<- readxl::read_excel("Data/Data.xlsx", sheet = 2)
+
+  #Filling in the LSM strain column
+D_Phosphorus <- D_Phosphorus %>%
+  fill(`LSM strain`)
+
+D_IndolA <- D_IndolA %>%
+  fill(`LSM strain`)
+
+  #Merge the 2 dataframes
+IAA_pg <- D_IndolA$`µg AIA/ g biomass`
+D_Biochem <- cbind.data.frame(D_Phosphorus, IAA_pg)
+names(D_Biochem)[names(D_Biochem) == "IAA_pg"] <- "µg IAA/ g biomass" #rename IAA column
+
+#Green House morphological trait measures
+
+#readxl::excel_sheets("Data/Data_GH.xlsx")
+D_Bean <- readxl::read_excel("Data/Data_GH.xlsx", sheet = 1)
+D_Maize <- readxl::read_excel("Data/Data_GH.xlsx", sheet = 2)
+D_Soy <- readxl::read_excel("Data/Data_GH.xlsx", sheet = 3)
+
+  #Filling in the treatments
+D_Bean <- D_Bean %>%
+  fill (`Treatments (strains)`)
+D_Maize <- D_Maize %>%
+  fill (`Treatments (strains)`)
+D_Soy <- D_Soy %>%
+  fill (`Treatments (strains)`)
+
+  #Adding the crop name column
+D_Bean$Cropname <- "Bean"
+D_Maize$Cropname <- "Maize"
+D_Soy$Cropname <- "Soybean"
+
+  #Eliminate N Soil (%) column from D_Soy
+D_Soy <- D_Soy[-which(names(D_Soy) == "N Soil (%)")] # - (eliminate) which column name in D_Soy is N Soil (%) (column 8)
+
+  #Eliminate last two rows
+D_Bean <- head(D_Bean, -2)
+D_Maize <- head(D_Maize, -2)
+D_Soy <- head(D_Soy, -2)
+
+  #Merge the 3 dataframes
+D_GH <- union(D_Bean, D_Maize) #check 2 lines between each merged dataframe, union_all for duplicates not to be removed
+D_GH <- union(D_GH, D_Soy)
+```
+
+## Part two: Biochemical parametres testing
+
+The Idol Acetic Acid (IAA) produced and the Phosphorous solubilized by each strain was tested in order to choose the ones with the highest amounts. In the article an F and Tukey tests were done to figure this out. Nevertheless, although the IAA data was homeoscedastic, when the residuals of the IAA concentrations were tested for normality, it was found that they do not follow a normal distribution and thus the F and Tukey tests could not be conducted if a data transformation process wasn't made first.
+
+### Idol Acetic Acid concentrations (IAA)
+Some tidying up of the data frame was done in order not to have errors pop up when running the code.
+````{r IAA tidy, echo = TRUE}
+D_IAA <- D_IndolA[-which(names(D_IndolA) == "Repetition")]
+names(D_IAA)[names(D_IAA) == "µg AIA/ g biomass"] <- "IAA_pg" 
+names(D_IAA)[names(D_IAA) == "LSM strain"] <- "LSM_strain" 
+
+```
+
+Normality was tested
+````{r IAA normality, echo = TRUE}
+D_IAA$LSM_strain <- as.factor(D_IAA$LSM_strain)
+ANOVA_IAA<- aov (D_IAA$IAA_pg ~ D_IAA$LSM_strain, data= D_IAA)
+print(summary(ANOVA_IAA))
+nortest::lillie.test(ANOVA_IAA$residuals)
+```
+
+Afterwards, homeoscedasticity was tested
+````{r Breusch-Pagan test, echo = TRUE}
+lmtest::bptest(ANOVA_IAA)
+```
+
+As they were not normal or homeoscedastic, Kruskal-Wallis and Holm analyses were carried out.
+````{r IAA K-W, echo = TRUE, out.width= "170%"}
+kr <- agricolae::kruskal(D_IAA[2], D_IAA[1], alpha = 0.05, p.adj ="holm", group=TRUE)
+plot (kr)
+
+```
+
+If we were to transform the data with a log function we would get normal residuals and also a homeoscedastic data set
+```{r IAA transformation, echo = TRUE}
+n_IAA <- log(D_IAA$IAA_pg)
+n_D_IAA <- data.frame(n_IAA, D_IAA$LSM_strain)
+ANOVA_n_IAA<- aov (n_D_IAA$n_IAA ~ n_D_IAA$D_IAA.LSM_strain, data= n_D_IAA)
+print(summary(ANOVA_n_IAA))
+nortest::lillie.test(ANOVA_n_IAA$residuals)
+
+lmtest::bptest(ANOVA_n_IAA)
+```
+
+So we could do ANOVA and Tukey test 
+````{r IAA Tukey, echo = TRUE,out.width= "170%"}
+T_nIAA <- HSD.test(ANOVA_n_IAA,'n_D_IAA$D_IAA.LSM_strain', group = TRUE, alpha = 0.05)
+T_nIAA$groups
+plot(T_nIAA)
+```
+
+### Solubilized Phosphorous (P)
+Like in the other dataset, some tidying up of the data frame was done in order not to have errors pop up when running the code.
+````{r P tidy, echo = TRUE}
+names(D_Phosphorus)[names(D_Phosphorus) == "µg P/ g biomass"] <- "P_pg" #rename µg P/ g biomass column
+names(D_Phosphorus)[names(D_Phosphorus) == "LSM strain"] <- "LSM_strain" #rename LSM strain column
+
+```
+
+The data were tested for normality
+````{r P normality test, echo = TRUE}
+ANOVA_P<- aov (D_Phosphorus$P_pg ~ D_Phosphorus$LSM_strain, data= D_Phosphorus)
+print(summary(ANOVA_P))
+nortest::lillie.test(ANOVA_P$residuals)
+
+```
+
+As they were normal and the differences between strains were significant, a Tukey test was conducted.
+````{r P Tukey, echo = TRUE, out.width= "170%"}
+T_P <- HSD.test(ANOVA_P,'D_Phosphorus$LSM_strain', group = TRUE, alpha = 0.05)
+T_P$groups
+plot(T_P)
+
+```
+
+The strains with the most P solubilization and IAA production correspond to the ones in the article.
+
+## Part three: Greenhouse Expermient testing 
+
+The greenhouse results are tested in order to find out the effect of the selected strains. First of all, in order to address significant differences, an ANOVA test has been carried out. 
+
+```{r ANOVA, echo = TRUE}
+#Anovas for Bean 
+anovabean3 <- aov(D_Bean[[3]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean3)
+anovabean4 <- aov(D_Bean[[4]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean4)
+anovabean5 <- aov(D_Bean[[5]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean5)
+anovabean6 <- aov(D_Bean[[6]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean6)
+anovabean7 <- aov(D_Bean[[7]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean7)
+anovabean8 <- aov(D_Bean[[8]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean8)
+anovabean9 <- aov(D_Bean[[9]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean9)
+anovabean10 <- aov(D_Bean[[10]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean10)
+anovabean11 <- aov(D_Bean[[11]]~D_Bean[[1]], data = D_Bean)
+summary(anovabean11)
+
+#Anova for Soy
+anovasoy3 <- aov(D_Soy[[3]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy3)
+anovasoy4 <- aov(D_Soy[[4]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy4)
+anovasoy5 <- aov(D_Soy[[5]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy5)
+anovasoy6 <- aov(D_Soy[[6]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy6)
+anovasoy7 <- aov(D_Soy[[7]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy7)
+anovasoy8 <- aov(D_Soy[[8]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy8)
+anovasoy9 <- aov(D_Soy[[9]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy9)
+anovasoy10 <- aov(D_Soy[[10]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy10)
+anovasoy11 <- aov(D_Soy[[11]]~D_Soy[[1]], data = D_Soy)
+summary(anovasoy11)
+
+#Anova for Maize
+anovamaize3 <- aov(D_Maize[[3]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize3)
+anovamaize4 <- aov(D_Maize[[4]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize4)
+anovamaize5 <- aov(D_Maize[[5]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize5)
+anovamaize6 <- aov(D_Maize[[6]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize6)
+anovamaize7 <- aov(D_Maize[[7]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize7)
+anovamaize8 <- aov(D_Maize[[8]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize8)
+anovamaize9 <- aov(D_Maize[[9]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize9)
+anovamaize10 <- aov(D_Maize[[10]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize10)
+anovamaize11 <- aov(D_Maize[[11]]~D_Maize[[1]], data = D_Maize)
+summary(anovamaize11)
+
+```
+
+Instead of using the code and doing them one by one, a "for loop" can be used, obtaining the result in a different format (list) and not in individual elements: 
+
+```{r Anova (for loop), echo=TRUE}
+#Anova Bean
+listbean <- vector(mode = "list", length = 9)
+i <- 1
+for (i in 3:11){
+  listbean[[i-1]] <- aov(D_Bean[[i]]~D_Bean[[1]])
+}
+
+summary(listbean[[2]])
+summary(listbean[[3]])
+summary(listbean[[4]])
+summary(listbean[[5]])
+summary(listbean[[6]])
+summary(listbean[[7]])
+summary(listbean[[8]])
+summary(listbean[[9]])
+summary(listbean[[10]])
+
+#Anova Soy
+listsoy <- vector(mode = "list", length = 9)
+i <- 1
+for (i in 3:11){
+  listsoy[[i-1]] <- aov(D_Soy[[i]]~D_Soy[[1]])
+}
+
+summary(listsoy[[2]])
+summary(listsoy[[3]])
+summary(listsoy[[4]])
+summary(listsoy[[5]])
+summary(listsoy[[6]])
+summary(listsoy[[7]])
+summary(listsoy[[8]])
+summary(listsoy[[9]])
+summary(listsoy[[10]])
+
+#Anova Maize 
+listmaize <- vector(mode = "list", length = 9)
+i <- 1
+for (i in 3:11){
+  listmaize[[i-1]] <- aov(D_Maize[[i]]~D_Maize[[1]])
+}
+
+summary(listmaize[[2]])
+summary(listmaize[[3]])
+summary(listmaize[[4]])
+summary(listmaize[[5]])
+summary(listmaize[[6]])
+summary(listmaize[[7]])
+summary(listmaize[[8]])
+summary(listmaize[[9]])
+summary(listmaize[[10]])
+
+```
+
+
+Also, a Two-Way Anova was carried out using the strains and the crops as independent variables.
+
+```{r Two-Way ANOVA}
+anovaall3 <- aov(D_GH[[3]]~D_GH[[1]] + D_GH[[12]], data = D_GH)
+summary(anovaall3)
+anovaall4 <- aov(D_GH[[4]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall4)
+anovaall5 <- aov(D_GH[[5]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall5)
+anovaall6 <- aov(D_GH[[6]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall6)
+anovaall7 <- aov(D_GH[[7]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall7)
+anovaall8 <- aov(D_GH[[8]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall8)
+anovaall9 <- aov(D_GH[[9]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall9)
+anovaall10 <- aov(D_GH[[10]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall10)
+anovaall11 <- aov(D_GH[[11]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
+summary(anovaall11)
+```
+
+```{r Two-Way ANOVA for loop, echo=TRUE}
+listall <- vector(mode = "list", length = 9)
+i <- 1
+for (i in 3:11){
+  listall[[i-1]] <- aov(D_GH[[i]]~D_GH[[1]] + D_GH[[12]])
+}
+
+summary(listall[[2]])
+summary(listall[[3]])
+summary(listall[[4]])
+summary(listall[[5]])
+summary(listall[[6]])
+summary(listall[[7]])
+summary(listall[[8]])
+summary(listall[[9]])
+summary(listall[[10]])
+```
+
+After the ANOVAs are done, the normality is tested, in this case using the Shapiro test: 
+```{r Shapiro, echo=TRUE}
+#shapiro tests Bean
+shapiro.test(anovabean3$residuals)
+shapiro.test(anovabean4$residuals)
+shapiro.test(anovabean5$residuals)
+shapiro.test(anovabean6$residuals)
+shapiro.test(anovabean7$residuals)
+shapiro.test(anovabean8$residuals)
+shapiro.test(anovabean9$residuals)
+shapiro.test(anovabean10$residuals)
+shapiro.test(anovabean11$residuals)
+
+#shapiro test Maize
+shapiro.test(anovamaize3$residuals)
+shapiro.test(anovamaize4$residuals)
+shapiro.test(anovamaize5$residuals)
+shapiro.test(anovamaize6$residuals)
+shapiro.test(anovamaize7$residuals)
+shapiro.test(anovamaize8$residuals)
+shapiro.test(anovamaize9$residuals)
+shapiro.test(anovamaize10$residuals)
+shapiro.test(anovamaize11$residuals)
+
+#shapiro test Soy
+shapiro.test(anovasoy3$residuals)
+shapiro.test(anovasoy4$residuals)
+shapiro.test(anovasoy5$residuals)
+shapiro.test(anovasoy6$residuals)
+shapiro.test(anovasoy7$residuals)
+shapiro.test(anovasoy8$residuals)
+shapiro.test(anovasoy9$residuals)
+shapiro.test(anovasoy10$residuals)
+shapiro.test(anovasoy11$residuals)
+
+#shapiro test ALL
+shapiro.test(anovaall3$residuals)
+shapiro.test(anovaall4$residuals)
+shapiro.test(anovaall5$residuals)
+shapiro.test(anovaall6$residuals)
+shapiro.test(anovaall7$residuals)
+shapiro.test(anovaall8$residuals)
+shapiro.test(anovaall9$residuals)
+shapiro.test(anovaall10$residuals)
+shapiro.test(anovaall11$residuals)
+
+```
+
+
+The homosceraticity is also a requirement in order to aprove the results of the ANOVA. It has been tested using the Breusch-Pagan test: 
+
+```{r Homosceraticity, echo = TRUE}
+#BEAN
+bptest(anovabean3)
+bptest(anovabean4)
+bptest(anovabean5)
+bptest(anovabean6)
+bptest(anovabean7)
+bptest(anovabean8)
+bptest(anovabean9)
+bptest(anovabean10)
+bptest(anovabean11)
+
+#MAIZE
+bptest(anovamaize3)
+bptest(anovamaize4)
+bptest(anovamaize5)
+bptest(anovamaize6)
+bptest(anovamaize7)
+bptest(anovamaize8)
+bptest(anovamaize9)
+bptest(anovamaize10)
+bptest(anovamaize11)
+
+#SOY
+bptest(anovasoy3)
+bptest(anovasoy4)
+bptest(anovasoy5)
+bptest(anovasoy6)
+bptest(anovasoy7)
+bptest(anovasoy8)
+bptest(anovasoy9)
+bptest(anovasoy10)
+bptest(anovasoy11)
+
+#ALL
+bptest(anovaall3)
+bptest(anovaall4)
+bptest(anovaall5)
+bptest(anovaall6)
+bptest(anovaall7)
+bptest(anovaall8)
+bptest(anovaall9)
+bptest(anovaall10)
+bptest(anovaall11)
+
+```
+
+For those variables who do not fulfill the conditions to validate ANOVA, a non-parametrical test needs to be done. In this case we have used the Kruskal-Wallis test:
+
+```{r Kruskal-Wallis, echo=TRUE}
+#Kruskal-Wallis for Bean (columns 3, 4 and 7)
+kruskalbean3 <- kruskal(D_Bean[[3]],D_Bean[[1]], alpha = 0.05)
+kruskalbean4 <- kruskal(D_Bean[[4]],D_Bean[[1]], alpha = 0.05)
+kruskalbean7 <- kruskal(D_Bean[[7]],D_Bean[[1]], alpha = 0.05)
+
+kruskalbean3
+kruskalbean4
+kruskalbean7
+
+#Kruskal-Wallis for Soy (columns 7,8 and 9)
+kruskalsoy7 <- kruskal(D_Soy[[7]],D_Soy[[1]], alpha = 0.05)
+kruskalsoy8 <- kruskal(D_Soy[[8]],D_Soy[[1]], alpha = 0.05)
+kruskalsoy9 <- kruskal(D_Soy[[9]],D_Soy[[1]], alpha = 0.05)
+
+kruskalsoy7
+kruskalsoy8
+kruskalsoy9
+
+#Kruskal-Wallis for Maize (columns 7,8 and 9)
+kruskalmaize7 <- kruskal(D_Maize[[7]],D_Maize[[1]], alpha = 0.05)
+kruskalmaize8 <- kruskal(D_Maize[[8]],D_Maize[[1]], alpha = 0.05)
+kruskalmaize9 <- kruskal(D_Maize[[9]],D_Maize[[1]], alpha = 0.05)
+
+kruskalmaize7
+kruskalmaize8
+kruskalmaize9
+
+#Kruskal-Wallis for ALL (3, 4, 5, 7 and 8)
+
+kruskalGH3 <- kruskal(D_GH[[3]],D_GH[[1]], alpha = 0.05)
+kruskalGH4 <- kruskal(D_GH[[4]],D_GH[[1]], alpha = 0.05)
+kruskalGH5 <- kruskal(D_GH[[5]],D_GH[[1]], alpha = 0.05)
+kruskalGH7 <- kruskal(D_GH[[7]],D_GH[[1]], alpha = 0.05)
+kruskalGH8 <- kruskal(D_GH[[8]],D_GH[[1]], alpha = 0.05)
+
+kruskalGH3
+kruskalGH4
+kruskalGH5
+kruskalGH7
+kruskalGH8
+
+```
+
+When required, posthocs analysis were done. At first, Tukey test was carried out, but once observed the low sensibility of the results (most of the strains were in the same group, without noticing any difference), Duncan test was prposed as an alternative, providing more diverse grouping. 
+
+```{r Tukey, echo=TRUE}
+
+Tukey.Bean3=HSD.test(anovabean3,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean3$groups
+Tukey.Bean4=HSD.test(anovabean4,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean4$groups
+Tukey.Bean5=HSD.test(anovabean5,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean5$groups
+Tukey.Bean6=HSD.test(anovabean6,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean6$groups
+Tukey.Bean9=HSD.test(anovabean9,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean9$groups
+Tukey.Bean10=HSD.test(anovabean10,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean10$groups
+Tukey.Bean11=HSD.test(anovabean11,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean11$groups
+
+Tukey.Soy3=HSD.test(anovasoy3,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy3$groups
+Tukey.Soy4=HSD.test(anovasoy4,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy4$groups
+Tukey.Soy5=HSD.test(anovasoy5,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy5$groups
+Tukey.Soy6=HSD.test(anovasoy6,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy6$groups
+Tukey.Soy10=HSD.test(anovasoy10,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy10$groups
+Tukey.Soy11=HSD.test(anovasoy11,"D_Soy[[1]]", group=TRUE, alpha=0.05)
+Tukey.Soy11$groups
+
+Tukey.Maize3=HSD.test(anovamaize3,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize3$groups
+Tukey.Maize4=HSD.test(anovamaize4,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize4$groups
+Tukey.Maize5=HSD.test(anovamaize5,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize5$groups
+Tukey.Maize6=HSD.test(anovamaize6,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize6$groups
+Tukey.Maize10=HSD.test(anovamaize10,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize10$groups
+Tukey.Maize11=HSD.test(anovamaize11,"D_Maize[[1]]", group=TRUE, alpha=0.05)
+Tukey.Maize11$groups
+
+```
+
+```{r Duncan, echo = TRUE}
+
+Duncan.Soy3 <- duncan.test(anovasoy3,"D_Soy[[1]]")
+Duncan.Soy3$groups
+Duncan.Soy4 <- duncan.test(anovasoy4,"D_Soy[[1]]")
+Duncan.Soy4$groups
+Duncan.Soy5 <- duncan.test(anovasoy5,"D_Soy[[1]]")
+Duncan.Soy5$groups
+Duncan.Soy6 <- duncan.test(anovasoy6,"D_Soy[[1]]")
+Duncan.Soy6$groups
+Duncan.Soy10 <- duncan.test(anovasoy10,"D_Soy[[1]]")
+Duncan.Soy10$groups
+Duncan.Soy11 <- duncan.test(anovasoy11,"D_Soy[[1]]")
+Duncan.Soy11$groups
+
+Duncan.Bean3 <- duncan.test(anovabean3,"D_Bean[[1]]")
+Duncan.Bean3$groups
+Duncan.Bean4 <- duncan.test(anovabean4,"D_Bean[[1]]")
+Duncan.Bean4$groups
+Duncan.Bean5 <- duncan.test(anovabean5,"D_Bean[[1]]")
+Duncan.Bean5$groups
+Duncan.Bean6 <- duncan.test(anovabean6,"D_Bean[[1]]")
+Duncan.Bean6$groups
+Duncan.Bean9 <- duncan.test(anovabean9,"D_Bean[[1]]")
+Duncan.Bean9$groups
+Duncan.Bean10 <- duncan.test(anovabean10,"D_Bean[[1]]")
+Duncan.Bean10$groups
+Duncan.Bean11 <- duncan.test(anovabean11,"D_Bean[[1]]")
+Duncan.Bean11$groups
+
+Duncan.Maize3 <- duncan.test(anovamaize3,"D_Maize[[1]]")
+Duncan.Maize3$groups
+Duncan.Maize4 <- duncan.test(anovamaize4,"D_Maize[[1]]")
+Duncan.Maize4$groups
+Duncan.Maize5 <- duncan.test(anovamaize5,"D_Maize[[1]]")
+Duncan.Maize5$groups
+Duncan.Maize6 <- duncan.test(anovamaize6,"D_Maize[[1]]")
+Duncan.Maize6$groups
+Duncan.Maize10 <- duncan.test(anovamaize10,"D_Maize[[1]]")
+Duncan.Maize10$groups
+Duncan.Maize11 <- duncan.test(anovamaize11,"D_Maize[[1]]")
+Duncan.Maize11$groups
+```
+
+## Next steps
+The analyses of the Biochemical data set (IAA and P) are done, nevertheless for the Greenhouse data we still have to see if the Crop moderates the strain and viceversa, do a PCA and also a discriminant analysis. Additionally, the code has to be polished and the discussion of the results needs to be thought out.
