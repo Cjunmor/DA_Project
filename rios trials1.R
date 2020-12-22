@@ -128,6 +128,7 @@ bartlett.test(D_Soy[[11]]~D_Soy[[1]], data = D_Soy)
 ##### shakira
 
 
+
 #FIRST, NORMALITY MUST BE TESTED
 
 #shapiro tests Bean 
