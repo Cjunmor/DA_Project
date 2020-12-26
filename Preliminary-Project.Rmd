@@ -11,11 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-In this project, we re-analyse the results obtained by Baron et al. in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](PeerJ 8:e9005 DOI 10.7717/peerj.9005) using RStudio. The authors test the permormances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms. 
+In this project, we re-analyze the results obtained by Baron et al. in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](PeerJ 8:e9005 DOI 10.7717/peerj.9005) using RStudio. The authors test the performances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms. 
 
-First, their IAA and P solubilization is tested in order to adress the more appropriate strains to be tested in green house experiment. 
+First, their IAA and P solubilization is tested in order to address the more appropriate strains to be tested in green house experiment. 
 
-After that, the second part consists in the test of plan-growth related parametres in presence of the strains chosen in the first part. 
+After that, the second part consists in the test of plan-growth related parameters in presence of the strains chosen in the first part. 
 
 The packages used are the next: 
 

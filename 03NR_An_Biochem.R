@@ -93,6 +93,9 @@ lmtest::bptest(ANOVA_P)
 lmtest::bptest(ANOVA_n_IAA)  # Breusch-Pagan test
 #BP = 0.010051, df = 1, p-value = 0.9201
 
+lmtest::bptest(ANOVA_IAA)
+#BP = 58.427, df = 29, p-value = 0.0009652
+
 ##Fisher test: no se puede
 ##Posthoc: Tukey
 #IAA
