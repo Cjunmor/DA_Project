@@ -48,6 +48,7 @@ library(tidyr)
 2. Carry out a Principal Components Analysis (PCA) in order to characterize the data.
 3.  Find correlations between fungi strain and plant species.
 
+
 ### Data download and "Data" folder creation
 ```{r}
 #Creating the folder "Data" if it doesn't exist
@@ -600,3 +601,68 @@ Duncan.Maize11$groups
 
 ## Next steps
 The analyses of the Biochemical data set (IAA and P) are done, nevertheless for the Greenhouse data we still have to see if the Crop moderates the strain and viceversa, do a PCA and also a discriminant analysis. Additionally, the code has to be polished and the discussion of the results needs to be thought out.
+
+## What we have so far: 
+
+### Green-House infection experiments
+
+From this analysis we got the next conclusions: 
+
+1) We have obtained the same results as in the article.
+2) Duncan and Tukey post-hoc analyses present the similar results with this data. However bibliography shows that Tukey is more conservative: it will make bigger groups, asuming that there aren't that many differences between groups. 
+
+3) The graphs that the authors chose in figure 6, are not random. They show what they consider it's more clear from each crop. This way, for example, in case of maize, it is quite clear that the different strains only have an effect in Plant Height, P Soil and N root. 
+    Note one thing in the graphs of the article (fig. 6): graph H corresponds to *N soil (%)*,     and that does not correspond with any of the measurements of the green house experiments.     One may think that is due to a spelling error, but the results do not match any other         experiment.
+4) The most efficient strains: This is done by hand, I've looking for some kind of package or command to select the data and create a table suitable for this, but I haven't find anything. I just created the table on Excel comparing the results in R, and the include the file in the Directory. Another way is to write the table (copy-pasting the data in this web: https://thisdavej.com/copy-table-in-excel-and-paste-as-a-markdown-table/ ), but there is no way to merge different rows, so it's not easy to understand. 
+
+|                      | Bean           |            |                |               |                |         |         |        |         |        |
+|----------------------|----------------|------------|----------------|---------------|----------------|---------|---------|--------|---------|--------|
+|                      | Measurement    | Plant High | Shoot dry mass | Root dry mass | Total dry mass | P soil  | P shoot | P root | N shoot | N root |
+| Most efficent strain | Kruskal-Wallis | -          | 183            | -             | -              | Control | -       | -      | -       | -      |
+|                      |                |            | 24             |               |                |         |         |        |         |        |
+|                      | Tukey          | Control    | -              | All           | All            | -       | 183     | All    | All     | All    |
+|                      |                |            |                |               |                |         | 68      |        |         |        |
+|                      |                |            |                |               |                |         | 179     |        |         |        |
+|                      | Duncan         | Control    | -              | All           | 183            | -       | 183     | All    | 14      | All    |
+|                      |                |            |                |               |                |         | 68      |        |         |        |
+|                      |                |            |                |               |                |         | 179     |        |         |        |
+
+
+
+|                      | Soy            |            |                |               |                |        |         |        |         |        |
+|----------------------|----------------|------------|----------------|---------------|----------------|--------|---------|--------|---------|--------|
+|                      | Measurement    | Plant High | Shoot dry mass | Root dry mass | Total dry mass | P soil | P shoot | P root | N shoot | N root |
+| Most efficent strain | Kruskal-Wallis | -          | -              | -             | -              | All    | 14      | 183    | -       | -      |
+|                      |                |            |                |               |                |        | 24      | 179    |         |        |
+|                      |                |            |                |               |                |        | 62      |        |         |        |
+|                      | Tukey          | 179        | All            | All           | All            | -      | -       | -      | All     | All    |
+|                      | Duncan         | 179        | All            | 24            | 24             | -      | -       | -      | All     | All    |
+
+
+
+
+
+
+|                      | Maize          |            |                |               |                |        |         |         |         |        |
+|----------------------|----------------|------------|----------------|---------------|----------------|--------|---------|---------|---------|--------|
+|                      | Measurement    | Plant High | Shoot dry mass | Root dry mass | Total dry mass | P soil | P shoot | P root  | N shoot | N root |
+| Most efficent strain | Kruskal-Wallis | -          | -              | -             | -              | 24     | 24      | Control | -       | -      |
+|                      |                |            |                |               |                |        |         | 65      |         |        |
+|                      |                |            |                |               |                |        |         | 14      |         |        |
+|                      |                |            |                |               |                |        |         | 24      |         |        |
+|                      |                |            |                |               |                |        |         | 62      |         |        |
+|                      | Tukey          | 65         | 65             | Control       | Control        | -      | -       | -       | All     | 65     |
+|                      |                |            |                |               | 65             |        |         |         |         | 24     |
+|                      | Duncan         | 65         | 65             | Control       | Control        | -      | -       | -       | All     | 65     |
+|                      |                |            |                |               | 65             |        |         |         |         | 24     |
+
+Note that, when the table says "All" means that all the strains are in the same group ("a"). We can assume that, even in those cases where ANOVA has confirmed that there are significant differences, these are not enough to identify different groups within the different strains. In those cases where the most effective strain is shown to be "Control" (no infection), we can assume that the strains do not have a positive effect in characteristic measured. The "-" indicates that that analysis has not been done in that situation. 
+
+5) Summary of the results: 
+
+**Bean** it's mostly affected by strain LSM 183 and 24 in the Shoot dry mass, LSM 183 in the total dry mass, LSM 183, 68 and 179 in the content of P in the shoot.
+
+**Soybean** is mainly affected by strain LSM 179 in the Plant Height, LSM 14, 24 and 62 in the P shoot and  LSM 183 and 179 in the P root.
+
+**Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root. 
+
