@@ -38,6 +38,10 @@ library(dplyr)
 library(readxl)
 # install.packages("tidyr")
 library(tidyr)
+#install.packages("kableExtra")
+library(kableExtra)
+#install.packages("tidyverse")
+library(tidyverse)
 ```
 
 ## Objectives
@@ -665,4 +669,65 @@ Note that, when the table says "All" means that all the strains are in the same 
 **Soybean** is mainly affected by strain LSM 179 in the Plant Height, LSM 14, 24 and 62 in the P shoot and  LSM 183 and 179 in the P root.
 
 **Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root. 
+
+```{r}
+anovaresult.crop <- rep(c("Bean", "Maize", "Soybean"), each = 9)
+anovaresult.variable <- rep(c(names(D_GH[,3:11])), 3)
+anovaresult.significance.bean <-  c("<0.05", "<0.1", ">0.1", ">0.1", "<0.1", "<0.001", ">0.1", "<0.1", ">0.1")
+anovaresult.significance.maize <- c("<0.001", "<0.01", "<0.05", "<0.01", "<0.05", "<0.01", "<0.001", ">0.1", "<0.05")
+anovaresult.significance.soy <-  c("<0.05", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1")
+anovaresult.significance <- c(anovaresult.significance.bean, anovaresult.significance.maize, anovaresult.significance.soy)
+normality.result.bean <- c("Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes")
+normality.result.maize <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
+normality.result.soy <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
+normality.result <-  c(normality.result.bean, normality.result.maize, normality.result.soy)
+homocedasticity.result.bean <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "Yes", "Yes")
+homocedasticity.result.maize <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
+homocedasticity.result.soy <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
+homocedasticity.result <- c(homocedasticity.result.bean, homocedasticity.result.maize, homocedasticity.result.soy)
+
+anova.dataframe <-  data.frame(anovaresult.crop, anovaresult.variable, anovaresult.significance, normality.result, homocedasticity.result)
+
+anova.dataframe <-  anova.dataframe %>% 
+  rename(Crop = anovaresult.crop,
+         Variable = anovaresult.variable,
+         "ANOVA   *a" = anovaresult.significance,
+         "Normality   *b" = normality.result,
+         "Homocedasticity  *c"= homocedasticity.result)
+  kbl(anova.dataframe, align = "c") %>%
+  collapse_rows(1, valign = "middle") %>% 
+  column_spec(2, color= ifelse(anovaresult.significance == "<0.1" | anovaresult.significance == ">0.1", "red", "black")) %>% 
+  kable_material(c("striped", "hover")) %>% 
+  footnote(general = "Table with the results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
+           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing low signifficance. 
+           b: Normality tested with Shapiro-Wilk test.*
+           c: Homocedasticity tested with the Breusch-Pagan test", general_title = "")
+  
+```
+
+```{r}
+
+#Bean
+
+strain.bean <-  c("Control","LSM_183/LSM_24", "None","None","None", "LSM_183", "Control", "LSM_183/LSM_68/LSM_179","LSM_14", "None", "LSM_14", "None", "None")
+posthoc.bean <- c("Kruskal-Wallis", "Kruskal-Wallis","Tukey", "Duncan","Tukey", "Duncan", "Kruskal-Wallis","Kruskal-Wallis","Kruskal-Wallis","Tukey", "Duncan","Tukey", "Duncan")
+var.name.bean <- c("Plant Height", "Shoot dry mass", "Root dry mass","Root dry mass", "Total dry mass","Total dry mass", "P soil", "P shoot", "P root", "N shoot", "N shoot", "N root", "N root")
+bean.name <- c(rep("Bean", 13))
+
+data.strains.beans <- data.frame(bean.name, var.name.bean, posthoc.bean, strain.bean)
+
+data.strains.beans <-  data.strains.beans %>% 
+  rename("Crop" = bean.name,
+         "Variable" = var.name.bean,
+         "Post-hoc analyses" = posthoc.bean,
+         "Optimal strain" = strain.bean)
+kbl(data.strains.beans) %>% 
+  kable_styling(bootstrap_options = c("hover"))%>%
+  column_spec(1, bold = T) %>%
+  column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
+  collapse_rows(columns = 1:2, valign = "middle") %>% 
+  footnote(general = "Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.", general_title = "")
+
+
+```
 
