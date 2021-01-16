@@ -247,6 +247,230 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -419,9 +643,9 @@ summary {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In this project, we re-analyse the results obtained by Baron et al. in their article <a href="PeerJ%208:e9005%20DOI%2010.7717/peerj.9005">&quot; Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi.&quot;</a> using RStudio. The authors test the permormances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms.</p>
-<p>First, their IAA and P solubilization is tested in order to adress the more appropriate strains to be tested in green house experiment.</p>
-<p>After that, the second part consists in the test of plan-growth related parametres in presence of the strains chosen in the first part.</p>
+<p>In this project, we re-analyze the results obtained by Baron et al. in their article <a href="PeerJ%208:e9005%20DOI%2010.7717/peerj.9005">&quot; Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi.&quot;</a> using RStudio. The authors test the performances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms.</p>
+<p>First, their IAA and P solubilization is tested in order to address the more appropriate strains to be tested in green house experiment.</p>
+<p>After that, the second part consists in the test of plan-growth related parameters in presence of the strains chosen in the first part.</p>
 <p>The packages used are the next:</p>
 </div>
 <div id="objectives" class="section level2">
@@ -2537,6 +2761,1044 @@ Duncan.Maize11$groups</code></pre>
 <div id="next-steps" class="section level2">
 <h2>Next steps</h2>
 <p>The analyses of the Biochemical data set (IAA and P) are done, nevertheless for the Greenhouse data we still have to see if the Crop moderates the strain and viceversa, do a PCA and also a discriminant analysis. Additionally, the code has to be polished and the discussion of the results needs to be thought out.</p>
+</div>
+<div id="what-we-have-so-far" class="section level2">
+<h2>What we have so far:</h2>
+<div id="green-house-infection-experiments" class="section level3">
+<h3>Green-House infection experiments</h3>
+<p>From this analysis we got the next conclusions:</p>
+<ol style="list-style-type: decimal">
+<li>We have obtained the same results as in the article.</li>
+<li>Duncan and Tukey post-hoc analyses present the similar results with this data. However bibliography shows that Tukey is more conservative: it will make bigger groups, asuming that there aren’t that many differences between groups.</li>
+</ol>
+<pre class="r"><code>anovaresult.crop &lt;- rep(c(&quot;Bean&quot;, &quot;Maize&quot;, &quot;Soybean&quot;), each = 9)
+anovaresult.variable &lt;- rep(c(names(D_GH[,3:11])), 3)
+anovaresult.significance.bean &lt;-  c(&quot;&lt;0.05&quot;, &quot;&lt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&lt;0.1&quot;, &quot;&lt;0.001&quot;, &quot;&gt;0.1&quot;, &quot;&lt;0.1&quot;, &quot;&gt;0.1&quot;)
+anovaresult.significance.maize &lt;- c(&quot;&lt;0.001&quot;, &quot;&lt;0.01&quot;, &quot;&lt;0.05&quot;, &quot;&lt;0.01&quot;, &quot;&lt;0.05&quot;, &quot;&lt;0.01&quot;, &quot;&lt;0.001&quot;, &quot;&gt;0.1&quot;, &quot;&lt;0.05&quot;)
+anovaresult.significance.soy &lt;-  c(&quot;&lt;0.05&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;, &quot;&gt;0.1&quot;)
+anovaresult.significance &lt;- c(anovaresult.significance.bean, anovaresult.significance.maize, anovaresult.significance.soy)
+normality.result.bean &lt;- c(&quot;Yes&quot;,&quot;Yes&quot;,&quot;Yes&quot;,&quot;Yes&quot;,&quot;No&quot;,&quot;No&quot;,&quot;Yes&quot;,&quot;Yes&quot;,&quot;Yes&quot;)
+normality.result.maize &lt;- c(&quot;Yes&quot;,&quot;Yes&quot;,&quot;Yes&quot;,&quot;Yes&quot;,&quot;No&quot;,&quot;No&quot;,&quot;No&quot;,&quot;Yes&quot;,&quot;Yes&quot;)
+normality.result.soy &lt;- c(&quot;Yes&quot;,&quot;Yes&quot;,&quot;Yes&quot;,&quot;Yes&quot;,&quot;No&quot;,&quot;No&quot;,&quot;No&quot;,&quot;Yes&quot;,&quot;Yes&quot;)
+normality.result &lt;-  c(normality.result.bean, normality.result.maize, normality.result.soy)
+homocedasticity.result.bean &lt;- c(&quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;)
+homocedasticity.result.maize &lt;- c( &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;)
+homocedasticity.result.soy &lt;- c( &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;)
+homocedasticity.result &lt;- c(homocedasticity.result.bean, homocedasticity.result.maize, homocedasticity.result.soy)
+
+anova.dataframe &lt;-  data.frame(anovaresult.crop, anovaresult.variable, anovaresult.significance, normality.result, homocedasticity.result)
+
+anova.dataframe &lt;-  anova.dataframe %&gt;% 
+  rename(Crop = anovaresult.crop,
+         Variable = anovaresult.variable,
+         &quot;ANOVA   *a&quot; = anovaresult.significance,
+         &quot;Normality   *b&quot; = normality.result,
+         &quot;Homocedasticity  *c&quot;= homocedasticity.result)
+  kbl(anova.dataframe, align = &quot;c&quot;) %&gt;%
+  collapse_rows(1, valign = &quot;middle&quot;) %&gt;% 
+  column_spec(2, color= ifelse(anovaresult.significance == &quot;&lt;0.1&quot; | anovaresult.significance == &quot;&gt;0.1&quot;, &quot;red&quot;, &quot;black&quot;)) %&gt;% 
+  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;% 
+  footnote(general = &quot;Table with the results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
+           a: ANOVA&#39;s P-value. Red color indicates P-values over 0.05, adressing low signifficance. 
+           b: Normality tested with Shapiro-Wilk test.*
+           c: Homocedasticity tested with the Breusch-Pagan test&quot;, general_title = &quot;&quot;)</code></pre>
+<table class=" lightable-material lightable-striped lightable-hover" style="font-family: &quot;Source Sans Pro&quot;, helvetica, sans-serif; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:center;">
+Crop
+</th>
+<th style="text-align:center;">
+Variable
+</th>
+<th style="text-align:center;">
+ANOVA *a
+</th>
+<th style="text-align:center;">
+Normality *b
+</th>
+<th style="text-align:center;">
+Homocedasticity *c
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="9">
+Bean
+</td>
+<td style="text-align:center;color: black !important;">
+Plant high (Mean - cm)
+</td>
+<td style="text-align:center;">
+&lt;0.05
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Shoot dry mass (g)
+</td>
+<td style="text-align:center;color: red !important;">
+&lt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Root dry mass (g)
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Total dry mass (g)
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Soil (mg/dm3)
+</td>
+<td style="text-align:center;color: red !important;">
+&lt;0.1
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Shoot g/kg
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.001
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Roots g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+N Shoot g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&lt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+N Roots g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="9">
+Maize
+</td>
+<td style="text-align:center;color: black !important;">
+Plant high (Mean - cm)
+</td>
+<td style="text-align:center;">
+&lt;0.001
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Shoot dry mass (g)
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.01
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Root dry mass (g)
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.05
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Total dry mass (g)
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.01
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Soil (mg/dm3)
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.05
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Shoot g/kg
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.01
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Roots g/kg
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.001
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+N Shoot g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+N Roots g/kg
+</td>
+<td style="text-align:center;color: black !important;">
+&lt;0.05
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="9">
+Soybean
+</td>
+<td style="text-align:center;color: black !important;">
+Plant high (Mean - cm)
+</td>
+<td style="text-align:center;">
+&lt;0.05
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Shoot dry mass (g)
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Root dry mass (g)
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Total dry mass (g)
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Soil (mg/dm3)
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Shoot g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+P Roots g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+No
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+N Shoot g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+N Roots g/kg
+</td>
+<td style="text-align:center;color: red !important;">
+&gt;0.1
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+<td style="text-align:center;">
+Yes
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Table with the results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. <br> a: ANOVA’s P-value. Red color indicates P-values over 0.05, adressing low signifficance. <br> b: Normality tested with Shapiro-Wilk test.*<br> c: Homocedasticity tested with the Breusch-Pagan test
+</td>
+</tr>
+</tfoot>
+</table>
+<pre class="r"><code>#Bean
+
+strain.bean &lt;-  c(&quot;Control&quot;,&quot;LSM_183/LSM_24&quot;, &quot;None&quot;,&quot;None&quot;,&quot;None&quot;, &quot;LSM_183&quot;, &quot;Control&quot;, &quot;LSM_183/LSM_68/LSM_179&quot;,&quot;LSM_14&quot;, &quot;None&quot;, &quot;LSM_14&quot;, &quot;None&quot;, &quot;None&quot;)
+posthoc.bean &lt;- c(&quot;Kruskal-Wallis&quot;, &quot;Kruskal-Wallis&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;, &quot;Kruskal-Wallis&quot;,&quot;Kruskal-Wallis&quot;,&quot;Kruskal-Wallis&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;)
+var.name.bean &lt;- c(&quot;Plant Height&quot;, &quot;Shoot dry mass&quot;, &quot;Root dry mass&quot;,&quot;Root dry mass&quot;, &quot;Total dry mass&quot;,&quot;Total dry mass&quot;, &quot;P soil&quot;, &quot;P shoot&quot;, &quot;P root&quot;, &quot;N shoot&quot;, &quot;N shoot&quot;, &quot;N root&quot;, &quot;N root&quot;)
+bean.name &lt;- c(rep(&quot;Bean&quot;, 13))
+
+data.strains.beans &lt;- data.frame(bean.name, var.name.bean, posthoc.bean, strain.bean)
+
+data.strains.beans &lt;-  data.strains.beans %&gt;% 
+  rename(&quot;Crop&quot; = bean.name,
+         &quot;Variable&quot; = var.name.bean,
+         &quot;Post-hoc analysis&quot; = posthoc.bean,
+         &quot;Optimal strain&quot; = strain.bean)
+kbl(data.strains.beans) %&gt;% 
+  kable_styling(bootstrap_options = c(&quot;hover&quot;))%&gt;%
+  column_spec(1, bold = T) %&gt;%
+  column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %&gt;% 
+  collapse_rows(columns = 1:2, valign = &quot;middle&quot;) %&gt;% 
+  footnote(general = &quot;Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.&quot;, general_title = &quot;&quot;)</code></pre>
+<table class="table table-hover" style="margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Crop
+</th>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+Post-hoc analysis
+</th>
+<th style="text-align:left;">
+Optimal strain
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;vertical-align: middle !important;" rowspan="13">
+Bean
+</td>
+<td style="text-align:left;">
+Plant Height
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+Control
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Shoot dry mass
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+LSM_183/LSM_24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Root dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Total dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_183
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P soil
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+Control
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P shoot
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+LSM_183/LSM_68/LSM_179
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P root
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+LSM_14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+N shoot
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+N root
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.
+</td>
+</tr>
+</tfoot>
+</table>
+<pre class="r"><code>#Maize
+strain.maize &lt;-  c(&quot;LSM_65&quot;,&quot;LSM_65&quot;,&quot;LSM_65&quot;,&quot;LSM_65&quot;,&quot;Control&quot;, &quot;Control&quot;, &quot;Control/LSM_65&quot;,&quot;Control/LSM_65&quot;, &quot;LSM_24&quot;, &quot;LSM_24&quot;, &quot;Control/LSM_65/LSM_14/LSM_24/LSM_62&quot;, &quot;None&quot;, &quot;None&quot;,&quot;LSM_65/LSM_24&quot;,&quot;LSM_65/LSM_24&quot;)
+posthoc.maize &lt;-  c(&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Kruskal-Wallis&quot;,&quot;Kruskal-Wallis&quot;,&quot;Kruskal-Wallis&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot; )
+var.name.maize &lt;- c(&quot;Plant Height&quot;, &quot;Plant Height&quot;, &quot;Shoot dry mass&quot;,&quot;Shoot dry mass&quot;, &quot;Root dry mass&quot;, &quot;Root dry mass&quot;, &quot;Total dry mass&quot;, &quot;Total dry mass&quot;, &quot;P soil&quot;, &quot;P shoot&quot;, &quot;P root&quot;,&quot;N shoot&quot;, &quot;N shoot&quot;, &quot;N root&quot;, &quot;N root&quot; )
+maize.name &lt;-  c(rep(&quot;Maize&quot;, 15))
+
+data.strains.maize &lt;-  data.frame(maize.name, var.name.maize, posthoc.maize, strain.maize)
+
+data.strains.maize &lt;- data.strains.maize %&gt;% 
+  rename(&quot;Crop&quot; = maize.name,
+          &quot;Variable&quot; = var.name.maize,
+          &quot;Post-hoc analysis&quot; = posthoc.maize,
+          &quot;Optimal strain&quot; = strain.maize)
+kbl(data.strains.maize) %&gt;% 
+  kable_styling(bootstrap_options = c(&quot;hover&quot;))%&gt;%
+  column_spec(1, bold = T) %&gt;%
+  column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %&gt;% 
+  collapse_rows(columns = 1:2, valign = &quot;middle&quot;) %&gt;% 
+  footnote(general = &quot;Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.&quot;, general_title = &quot;&quot;)</code></pre>
+<table class="table table-hover" style="margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Crop
+</th>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+Post-hoc analysis
+</th>
+<th style="text-align:left;">
+Optimal strain
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;vertical-align: middle !important;" rowspan="15">
+Maize
+</td>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Plant Height
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+LSM_65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Shoot dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+LSM_65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Root dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+Control
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+Control
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Total dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+Control/LSM_65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+Control/LSM_65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P soil
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+LSM_24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P shoot
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+LSM_24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P root
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+Control/LSM_65/LSM_14/LSM_24/LSM_62
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+N shoot
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+N root
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+LSM_65/LSM_24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_65/LSM_24
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.
+</td>
+</tr>
+</tfoot>
+</table>
+<pre class="r"><code>#Soy
+strain.soy &lt;- c(&quot;LSM_179&quot;,&quot;LSM_179&quot;, &quot;None&quot;,&quot;None&quot;,&quot;None&quot;, &quot;LSM_24&quot;, &quot;None&quot;, &quot;LSM_24&quot;, &quot;None&quot;, &quot;LSM_14/LSM_24/LSM_62&quot;, &quot;LSM_183/LSM_179&quot;,&quot;None&quot;, &quot;None&quot;,&quot;None&quot;,&quot;None&quot;)
+posthoc.soy &lt;- c(&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Kruskal-Wallis&quot;,&quot;Kruskal-Wallis&quot;,&quot;Kruskal-Wallis&quot;,&quot;Tukey&quot;, &quot;Duncan&quot;,&quot;Tukey&quot;, &quot;Duncan&quot; )
+var.name.soy &lt;- c(&quot;Plant Height&quot;, &quot;Plant Height&quot;, &quot;Shoot dry mass&quot;,&quot;Shoot dry mass&quot;, &quot;Root dry mass&quot;, &quot;Root dry mass&quot;, &quot;Total dry mass&quot;, &quot;Total dry mass&quot;, &quot;P soil&quot;, &quot;P shoot&quot;, &quot;P root&quot;,&quot;N shoot&quot;, &quot;N shoot&quot;, &quot;N root&quot;, &quot;N root&quot; )
+soy.name &lt;-  c(rep(&quot;Soybean&quot;, 15))
+
+data.strains.soy &lt;-  data.frame(soy.name, var.name.soy, posthoc.soy, strain.soy)
+
+data.strains.soy &lt;- data.strains.soy %&gt;% 
+  rename(&quot;Crop&quot; = soy.name,
+         &quot;Variable&quot; = var.name.soy,
+         &quot;Post-hoc analysis&quot; = posthoc.soy,
+         &quot;Optimal strain&quot; = strain.soy)
+kbl(data.strains.soy) %&gt;% 
+  kable_styling(bootstrap_options = c(&quot;hover&quot;))%&gt;%
+  column_spec(1, bold = T) %&gt;%
+  column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %&gt;% 
+  collapse_rows(columns = 1:2, valign = &quot;middle&quot;) %&gt;% 
+  footnote(general = &quot;Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.&quot;, general_title = &quot;&quot;)</code></pre>
+<table class="table table-hover" style="margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Crop
+</th>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+Post-hoc analysis
+</th>
+<th style="text-align:left;">
+Optimal strain
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;vertical-align: middle !important;" rowspan="15">
+Soybean
+</td>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Plant Height
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+LSM_179
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_179
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Shoot dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Root dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Total dry mass
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+LSM_24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P soil
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P shoot
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+LSM_14/LSM_24/LSM_62
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P root
+</td>
+<td style="text-align:left;">
+Kruskal-Wallis
+</td>
+<td style="text-align:left;">
+LSM_183/LSM_179
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+N shoot
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+N root
+</td>
+<td style="text-align:left;">
+Tukey
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Duncan
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.
+</td>
+</tr>
+</tfoot>
+</table>
+<ol start="5" style="list-style-type: decimal">
+<li>Summary of the results:</li>
+</ol>
+<p><strong>Bean</strong> it’s mostly affected by strain LSM 183 and 24 in the Shoot dry mass, LSM 183 in the total dry mass, LSM 183, 68 and 179 in the content of P in the shoot.</p>
+<p><strong>Soybean</strong> is mainly affected by strain LSM 179 in the Plant Height, LSM 14, 24 and 62 in the P shoot and LSM 183 and 179 in the P root.</p>
+<p><strong>Maize</strong> is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root.</p>
+</div>
 </div>
 
 

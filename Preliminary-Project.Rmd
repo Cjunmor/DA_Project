@@ -731,4 +731,4 @@ kbl(data.strains.soy) %>%
 
 **Soybean** is mainly affected by strain LSM 179 in the Plant Height, LSM 14, 24 and 62 in the P shoot and  LSM 183 and 179 in the P root.
 
-**Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root. 
+**Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root
