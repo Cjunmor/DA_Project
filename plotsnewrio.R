@@ -26,5 +26,3 @@ ggplot(D_Bean, aes(x=treatmentssort.Bhight, y=D_Bean$`Plant high (Mean - cm)`, f
 
 
 
-
-
