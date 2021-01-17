@@ -2,16 +2,19 @@
 title: "PROJECT"
 author: "Carolina Juncá, Riyad Hilal and Ignacio Romero"
 date: "15/12/2020"
-output: html_document
+output:
+  html_document:
+    code_folding: hide
+
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set
 ```
 
 ## Introduction
 
-In this project, we re-analyze the results obtained by Baron et al. in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](PeerJ 8:e9005 DOI 10.7717/peerj.9005) using RStudio. The authors test the performances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms. 
+In this project, we re-analyze the results obtained by Baron et al. in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](https://peerj.com/articles/9005/) using RStudio. The authors test the performances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms. 
 
 First, their IAA and P solubilization is tested in order to address the more appropriate strains to be tested in green house experiment. 
 
@@ -19,7 +22,7 @@ After that, the second part consists in the test of plan-growth related paramete
 
 The packages used are the next: 
 
-```{r Packages used, echo=TRUE, include = FALSE}
+```{r Packages used, message = FALSE, warning = FALSE, results="hide", class.source = 'fold-show' }
 #install.packages("agricolae")
 library(agricolae)
 #install.packages("lmtest")
@@ -56,6 +59,7 @@ The F test only compares two variables at a time, an Analisis of Variance (ANOVA
 
 ### Data download and "Data" folder creation
 ```{r}
+
 #Creating the folder "Data" if it doesn't exist
 D <- "Data"
 if (!dir.exists(D)) dir.create(D)
@@ -74,7 +78,7 @@ download.file(xl_2, "Data/Data_GH.xlsx", mode = "wb")
 
 In this part, the data are transformed and organized in order to allow the use of RStudio. 
 
-```{r Data organisation, echo = TRUE}
+```{r Data organisation }
 
 #Bacteria IAA and P concentrations
 
@@ -133,7 +137,7 @@ The Idol Acetic Acid (IAA) produced and the Phosphorous solubilized by each stra
 
 ### Idol Acetic Acid concentrations (IAA)
 Some tidying up of the data frame was done in order not to have errors pop up when running the code.
-````{r IAA tidy, echo = TRUE}
+````{r IAA tidy  }
 D_IAA <- D_IndolA[-which(names(D_IndolA) == "Repetition")]
 names(D_IAA)[names(D_IAA) == "µg AIA/ g biomass"] <- "IAA_pg" 
 names(D_IAA)[names(D_IAA) == "LSM strain"] <- "LSM_strain" 
@@ -141,7 +145,7 @@ names(D_IAA)[names(D_IAA) == "LSM strain"] <- "LSM_strain"
 ```
 
 Normality was tested
-````{r IAA normality, echo = TRUE}
+````{r IAA normality  }
 D_IAA$LSM_strain <- as.factor(D_IAA$LSM_strain)
 ANOVA_IAA<- aov (D_IAA$IAA_pg ~ D_IAA$LSM_strain, data= D_IAA)
 print(summary(ANOVA_IAA))
@@ -151,19 +155,19 @@ We chose to do the Lillie test because...
 
 
 Afterwards, homeoscedasticity was tested
-````{r Breusch-Pagan test, echo = TRUE}
+````{r Breusch-Pagan test  }
 lmtest::bptest(ANOVA_IAA)
 ```
 
 As they were not normal or homeoscedastic, Kruskal-Wallis and Holm analyses were carried out.
-````{r IAA K-W, echo = TRUE, out.width= "170%"}
+````{r IAA K-W, out.width= "170%"}
 kr <- agricolae::kruskal(D_IAA[2], D_IAA[1], alpha = 0.05, p.adj ="holm", group=TRUE)
 plot (kr)
 
 ```
 
 If we were to transform the data with a log function we would get normal residuals and also a homeoscedastic data set
-```{r IAA transformation, echo = TRUE}
+```{r IAA transformation}
 n_IAA <- log(D_IAA$IAA_pg)
 n_D_IAA <- data.frame(n_IAA, D_IAA$LSM_strain)
 ANOVA_n_IAA<- aov (n_D_IAA$n_IAA ~ n_D_IAA$D_IAA.LSM_strain, data= n_D_IAA)
@@ -174,7 +178,7 @@ lmtest::bptest(ANOVA_n_IAA)
 ```
 
 So we could do ANOVA and Tukey test 
-````{r IAA Tukey, echo = TRUE,out.width= "170%"}
+````{r IAA Tukey, out.width= "170%"}
 T_nIAA <- HSD.test(ANOVA_n_IAA,'n_D_IAA$D_IAA.LSM_strain', group = TRUE, alpha = 0.05)
 T_nIAA$groups
 plot(T_nIAA)
@@ -187,14 +191,14 @@ They chose strains belonging to the groups A, B and C (65,62,68,179,183)
 
 ### Solubilized Phosphorous (P)
 Like in the other dataset, some tidying up of the data frame was done in order not to have errors pop up when running the code.
-````{r P tidy, echo = TRUE}
+````{r P tidy}
 names(D_Phosphorus)[names(D_Phosphorus) == "µg P/ g biomass"] <- "P_pg" #rename µg P/ g biomass column
 names(D_Phosphorus)[names(D_Phosphorus) == "LSM strain"] <- "LSM_strain" #rename LSM strain column
 
 ```
 
 The data were tested for normality
-````{r P normality test, echo = TRUE}
+````{r P normality test}
 ANOVA_P<- aov (D_Phosphorus$P_pg ~ D_Phosphorus$LSM_strain, data= D_Phosphorus)
 print(summary(ANOVA_P))
 nortest::lillie.test(ANOVA_P$residuals)
@@ -202,7 +206,7 @@ nortest::lillie.test(ANOVA_P$residuals)
 ```
 
 As the residuals were normal and the differences between strains were significant, a Tukey test was conducted.
-````{r P Tukey, echo = TRUE, out.width= "170%"}
+````{r P Tukey, out.width= "170%"}
 T_P <- HSD.test(ANOVA_P,'D_Phosphorus$LSM_strain', group = TRUE, alpha = 0.05)
 T_P$groups
 plot(T_P)
@@ -221,169 +225,45 @@ They chose the A and AB groups (strains 24,65 and 14)
 
 The greenhouse results are tested in order to find out the effect of the selected strains. First of all, in order to address significant differences, an ANOVA test has been carried out. 
 
-```{r ANOVA, echo = TRUE}
+```{r ANOVA, message = FALSE, warning = FALSE, results="hide"}
 #Anovas for Bean 
 anovabean3 <- aov(D_Bean[[3]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean3)
 anovabean4 <- aov(D_Bean[[4]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean4)
 anovabean5 <- aov(D_Bean[[5]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean5)
 anovabean6 <- aov(D_Bean[[6]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean6)
 anovabean7 <- aov(D_Bean[[7]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean7)
 anovabean8 <- aov(D_Bean[[8]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean8)
 anovabean9 <- aov(D_Bean[[9]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean9)
 anovabean10 <- aov(D_Bean[[10]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean10)
 anovabean11 <- aov(D_Bean[[11]]~D_Bean[[1]], data = D_Bean)
-summary(anovabean11)
 
 #Anova for Soy
 anovasoy3 <- aov(D_Soy[[3]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy3)
 anovasoy4 <- aov(D_Soy[[4]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy4)
 anovasoy5 <- aov(D_Soy[[5]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy5)
 anovasoy6 <- aov(D_Soy[[6]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy6)
 anovasoy7 <- aov(D_Soy[[7]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy7)
 anovasoy8 <- aov(D_Soy[[8]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy8)
 anovasoy9 <- aov(D_Soy[[9]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy9)
 anovasoy10 <- aov(D_Soy[[10]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy10)
 anovasoy11 <- aov(D_Soy[[11]]~D_Soy[[1]], data = D_Soy)
-summary(anovasoy11)
 
 #Anova for Maize
 anovamaize3 <- aov(D_Maize[[3]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize3)
 anovamaize4 <- aov(D_Maize[[4]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize4)
 anovamaize5 <- aov(D_Maize[[5]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize5)
 anovamaize6 <- aov(D_Maize[[6]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize6)
 anovamaize7 <- aov(D_Maize[[7]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize7)
 anovamaize8 <- aov(D_Maize[[8]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize8)
 anovamaize9 <- aov(D_Maize[[9]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize9)
 anovamaize10 <- aov(D_Maize[[10]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize10)
 anovamaize11 <- aov(D_Maize[[11]]~D_Maize[[1]], data = D_Maize)
-summary(anovamaize11)
 
 ```
 
-Instead of using the code and doing them one by one, a "for loop" can be used, obtaining the result in a different format (list) and not in individual elements: 
-
-```{r Anova (for loop), echo=TRUE}
-#Anova Bean
-listbean <- vector(mode = "list", length = 9)
-i <- 1
-for (i in 3:11){
-  listbean[[i-1]] <- aov(D_Bean[[i]]~D_Bean[[1]])
-}
-
-summary(listbean[[2]])
-summary(listbean[[3]])
-summary(listbean[[4]])
-summary(listbean[[5]])
-summary(listbean[[6]])
-summary(listbean[[7]])
-summary(listbean[[8]])
-summary(listbean[[9]])
-summary(listbean[[10]])
-
-#Anova Soy
-listsoy <- vector(mode = "list", length = 9)
-i <- 1
-for (i in 3:11){
-  listsoy[[i-1]] <- aov(D_Soy[[i]]~D_Soy[[1]])
-}
-
-summary(listsoy[[2]])
-summary(listsoy[[3]])
-summary(listsoy[[4]])
-summary(listsoy[[5]])
-summary(listsoy[[6]])
-summary(listsoy[[7]])
-summary(listsoy[[8]])
-summary(listsoy[[9]])
-summary(listsoy[[10]])
-
-#Anova Maize 
-listmaize <- vector(mode = "list", length = 9)
-i <- 1
-for (i in 3:11){
-  listmaize[[i-1]] <- aov(D_Maize[[i]]~D_Maize[[1]])
-}
-
-summary(listmaize[[2]])
-summary(listmaize[[3]])
-summary(listmaize[[4]])
-summary(listmaize[[5]])
-summary(listmaize[[6]])
-summary(listmaize[[7]])
-summary(listmaize[[8]])
-summary(listmaize[[9]])
-summary(listmaize[[10]])
-
-```
-
-
-Also, a Two-Way Anova was carried out using the strains and the crops as independent variables.
-
-```{r Two-Way ANOVA}
-anovaall3 <- aov(D_GH[[3]]~D_GH[[1]] + D_GH[[12]], data = D_GH)
-summary(anovaall3)
-anovaall4 <- aov(D_GH[[4]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall4)
-anovaall5 <- aov(D_GH[[5]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall5)
-anovaall6 <- aov(D_GH[[6]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall6)
-anovaall7 <- aov(D_GH[[7]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall7)
-anovaall8 <- aov(D_GH[[8]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall8)
-anovaall9 <- aov(D_GH[[9]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall9)
-anovaall10 <- aov(D_GH[[10]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall10)
-anovaall11 <- aov(D_GH[[11]]~D_GH[[1]]+ D_GH[[12]], data = D_GH)
-summary(anovaall11)
-```
-
-```{r Two-Way ANOVA for loop, echo=TRUE}
-listall <- vector(mode = "list", length = 9)
-i <- 1
-for (i in 3:11){
-  listall[[i-1]] <- aov(D_GH[[i]]~D_GH[[1]] + D_GH[[12]])
-}
-
-summary(listall[[2]])
-summary(listall[[3]])
-summary(listall[[4]])
-summary(listall[[5]])
-summary(listall[[6]])
-summary(listall[[7]])
-summary(listall[[8]])
-summary(listall[[9]])
-summary(listall[[10]])
-```
 
 After the ANOVAs are done, the normality is tested, in this case using the Shapiro test: 
-```{r Shapiro, echo=TRUE}
+```{r Shapiro ,message = FALSE, warning = FALSE, results="hide"}
 #shapiro tests Bean
 shapiro.test(anovabean3$residuals)
 shapiro.test(anovabean4$residuals)
@@ -417,23 +297,12 @@ shapiro.test(anovasoy9$residuals)
 shapiro.test(anovasoy10$residuals)
 shapiro.test(anovasoy11$residuals)
 
-#shapiro test ALL
-shapiro.test(anovaall3$residuals)
-shapiro.test(anovaall4$residuals)
-shapiro.test(anovaall5$residuals)
-shapiro.test(anovaall6$residuals)
-shapiro.test(anovaall7$residuals)
-shapiro.test(anovaall8$residuals)
-shapiro.test(anovaall9$residuals)
-shapiro.test(anovaall10$residuals)
-shapiro.test(anovaall11$residuals)
-
 ```
 
 
 The homosceraticity is also a requirement in order to aprove the results of the ANOVA. It has been tested using the Breusch-Pagan test: 
 
-```{r Homosceraticity, echo = TRUE}
+```{r Homosceraticity,message = FALSE, warning = FALSE, results="hide"}
 #BEAN
 bptest(anovabean3)
 bptest(anovabean4)
@@ -467,22 +336,11 @@ bptest(anovasoy9)
 bptest(anovasoy10)
 bptest(anovasoy11)
 
-#ALL
-bptest(anovaall3)
-bptest(anovaall4)
-bptest(anovaall5)
-bptest(anovaall6)
-bptest(anovaall7)
-bptest(anovaall8)
-bptest(anovaall9)
-bptest(anovaall10)
-bptest(anovaall11)
-
 ```
 
 For those variables who do not fulfill the conditions to validate ANOVA, a non-parametrical test needs to be done. In this case we have used the Kruskal-Wallis test:
 
-```{r Kruskal-Wallis, echo=TRUE}
+```{r Kruskal-Wallis, message = FALSE, warning = FALSE, results="hide"}
 #Kruskal-Wallis for Bean (columns 3, 4 and 7)
 kruskalbean3 <- kruskal(D_Bean[[3]],D_Bean[[1]], alpha = 0.05)
 kruskalbean4 <- kruskal(D_Bean[[4]],D_Bean[[1]], alpha = 0.05)
@@ -528,7 +386,7 @@ kruskalGH8
 
 When required, posthocs analysis were done. At first, Tukey test was carried out, but once observed the low sensibility of the results (most of the strains were in the same group, without noticing any difference), Duncan test was prposed as an alternative, providing more diverse grouping. 
 
-```{r Tukey, echo=TRUE}
+```{r Tukey, message = FALSE, warning = FALSE, results="hide"}
 
 Tukey.Bean3=HSD.test(anovabean3,"D_Bean[[1]]", group=TRUE, alpha=0.05)
 Tukey.Bean3$groups
@@ -573,7 +431,7 @@ Tukey.Maize11$groups
 
 ```
 
-```{r Duncan, echo = TRUE}
+```{r Duncan, message = FALSE, warning = FALSE, results="hide" }
 
 Duncan.Soy3 <- duncan.test(anovasoy3,"D_Soy[[1]]")
 Duncan.Soy3$groups
@@ -632,111 +490,115 @@ From this analysis we got the next conclusions:
 
 
 
-```{r ANOVA RESULTS}
+```{r ANOVA RESULTS, message = FALSE, warning = FALSE}
 anovaresult.crop <- rep(c("Bean", "Maize", "Soybean"), each = 9)
-anovaresult.variable <- rep(c(names(D_GH[,3:11])), 3)
-anovaresult.significance.bean <-  c("<0.05", "<0.1", ">0.1", ">0.1", "<0.1", "<0.001", ">0.1", "<0.1", ">0.1")
-anovaresult.significance.maize <- c("<0.001", "<0.01", "<0.05", "<0.01", "<0.05", "<0.01", "<0.001", ">0.1", "<0.05")
-anovaresult.significance.soy <-  c("<0.05", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1")
-anovaresult.significance <- c(anovaresult.significance.bean, anovaresult.significance.maize, anovaresult.significance.soy)
+
+anovaresult.variable <- rep(c(names(D_GH[,3:11])), 3) 
+
+pvalue.bean <-c("0.0124 *", "0.0788", "0.628", "0.203", "0.061", "9.04e-10 ***", "0.623", "0.0245 *", "0.462")
+pvalue.maize <- c("9.53e-07 ***", "0.0064 **", "0.0129 *", "0.00552 **", "0.0274 *" , "0.00933 **", "0.000103 ***","0.637", "0.0209 *")
+pvalue.soy <- c("0.0311 *", "0.465", "0.216", "0.245", "0.94", "0.347", "0.232", "0.557", "0.7")
+pvalue <- c(pvalue.bean, pvalue.maize, pvalue.soy)
+
 normality.result.bean <- c("Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes")
 normality.result.maize <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
 normality.result.soy <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
 normality.result <-  c(normality.result.bean, normality.result.maize, normality.result.soy)
+
 homocedasticity.result.bean <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "Yes", "Yes")
 homocedasticity.result.maize <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
 homocedasticity.result.soy <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
 homocedasticity.result <- c(homocedasticity.result.bean, homocedasticity.result.maize, homocedasticity.result.soy)
 
-anova.dataframe <-  data.frame(anovaresult.crop, anovaresult.variable, anovaresult.significance, normality.result, homocedasticity.result)
+anova.dataframe <-  data.frame(anovaresult.crop,anovaresult.variable,  pvalue, normality.result, homocedasticity.result)
 
 anova.dataframe <-  anova.dataframe %>% 
   rename(Crop = anovaresult.crop,
          Variable = anovaresult.variable,
-         "ANOVA   *a" = anovaresult.significance,
+         "ANOVA   *a" = pvalue,
          "Normality   *b" = normality.result,
          "Homocedasticity  *c"= homocedasticity.result)
-  kbl(anova.dataframe, align = "c") %>%
+
+AnovaTable <- kbl(anova.dataframe, align = "c") %>%
   collapse_rows(1, valign = "middle") %>% 
-  column_spec(2, color= ifelse(anovaresult.significance == "<0.1" | anovaresult.significance == ">0.1", "red", "black")) %>% 
+  column_spec(2, color= ifelse(pvalue == "0.0788"| pvalue == "0.628"| pvalue == "0.203"| pvalue == "0.061"| pvalue == "0.623"| pvalue == "0.462"| pvalue =="0.637"| pvalue == "0.465"| pvalue == "0.216"| pvalue == "0.245"| pvalue == "0.94"| pvalue == "0.347"| pvalue == "0.232"| pvalue == "0.557"| pvalue == "0.7", "red", "black")) %>% 
   kable_material(c("striped", "hover")) %>% 
   footnote(general = "Table with the results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
-           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing low signifficance. 
+           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing not signifficant data. *: 95% confidance; **: 99%; ***: 99.9%
            b: Normality tested with Shapiro-Wilk test.*
            c: Homocedasticity tested with the Breusch-Pagan test", general_title = "")
-  
+AnovaTable
 ```
 
 ```{r BEAN STRAINS}
-
-#Bean
-
-strain.bean <-  c("Control","LSM_183/LSM_24", "None","None","None", "LSM_183", "Control", "LSM_183/LSM_68/LSM_179","LSM_14", "None", "LSM_14", "None", "None")
-posthoc.bean <- c("Kruskal-Wallis", "Kruskal-Wallis","Tukey", "Duncan","Tukey", "Duncan", "Kruskal-Wallis","Kruskal-Wallis","Kruskal-Wallis","Tukey", "Duncan","Tukey", "Duncan")
-var.name.bean <- c("Plant Height", "Shoot dry mass", "Root dry mass","Root dry mass", "Total dry mass","Total dry mass", "P soil", "P shoot", "P root", "N shoot", "N shoot", "N root", "N root")
-bean.name <- c(rep("Bean", 13))
-
-data.strains.beans <- data.frame(bean.name, var.name.bean, posthoc.bean, strain.bean)
+strain.bean <-  c("Control","NA", "NA", "NA", "Control", "LSM_183/LSM_68/LSM_179","LSM_14", "NA",  "NA")
+posthoc.bean <- c("Kruskal-Wallis", "Not significant", "Not significant", "Not significant", "Kruskal-Wallis","Kruskal-Wallis","Kruskal-Wallis", "Not significant", "Not significant")
+var.name.bean <- c("Plant Height", "Shoot dry mass", "Root dry mass", "Total dry mass", "P soil", "P shoot", "P root", "N shoot", "N root")
+bean.name <- c(rep("Bean", 9))
+bean.groups <- c("a, ab, abc, abc, abc, bcd, cd, d","a, a, a, a, a, a, a, a", "a, a, a, a, a, a, a, a","a, a, a, a, a, a, a, a","a, ab, ab, b, b, b, b, b", "a, a, a, b, b, b, b, b", "a, ab, ab, ab, ab, ab, ab, b","a, a, a, a, a, a, a, a", "a, a, a, a, a, a, a, a")
+data.strains.beans <- data.frame(bean.name, var.name.bean, posthoc.bean,bean.groups, strain.bean)
 
 data.strains.beans <-  data.strains.beans %>% 
   rename("Crop" = bean.name,
          "Variable" = var.name.bean,
          "Post-hoc analysis" = posthoc.bean,
+         "Groups"= bean.groups,
          "Optimal strain" = strain.bean)
-kbl(data.strains.beans) %>% 
+BeanTable <- kbl(data.strains.beans) %>% 
   kable_styling(bootstrap_options = c("hover"))%>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
-  collapse_rows(columns = 1:2, valign = "middle") %>% 
-  footnote(general = "Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.", general_title = "")
+  collapse_rows(columns = 1, valign = "middle") %>% 
+  footnote(general = "Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable", general_title = "")
 
-
+BeanTable
 ```
 
 ```{r MAIZE STRAINS}
-#Maize
-strain.maize <-  c("LSM_65","LSM_65","LSM_65","LSM_65","Control", "Control", "Control/LSM_65","Control/LSM_65", "LSM_24", "LSM_24", "Control/LSM_65/LSM_14/LSM_24/LSM_62", "None", "None","LSM_65/LSM_24","LSM_65/LSM_24")
-posthoc.maize <-  c("Tukey", "Duncan","Tukey", "Duncan","Tukey", "Duncan","Tukey", "Duncan","Kruskal-Wallis","Kruskal-Wallis","Kruskal-Wallis","Tukey", "Duncan","Tukey", "Duncan" )
-var.name.maize <- c("Plant Height", "Plant Height", "Shoot dry mass","Shoot dry mass", "Root dry mass", "Root dry mass", "Total dry mass", "Total dry mass", "P soil", "P shoot", "P root","N shoot", "N shoot", "N root", "N root" )
-maize.name <-  c(rep("Maize", 15))
-
-data.strains.maize <-  data.frame(maize.name, var.name.maize, posthoc.maize, strain.maize)
+strain.maize <-  c("LSM_65","LSM_65","Control","Control/LSM_65", "LSM_24", "LSM_24", "Control/LSM_65/LSM_14/LSM_24/LSM_62", "NA","LSM_65/LSM_24")
+posthoc.maize <-  c("Duncan","Duncan","Duncan","Duncan","Kruskal-Wallis","Kruskal-Wallis","Kruskal-Wallis", "Not significant", "Duncan" )
+var.name.maize <- c("Plant Height", "Shoot dry mass","Root dry mass", "Total dry mass", "P soil", "P shoot", "P root","N shoot", "N root" )
+maize.name <-  c(rep("Maize", 9))
+maize.groups <- c("a, ab, bc, bc, cd, cd, de, e","a, ab, ab, ab, abc, bc, bc, c","a, ab, abc, abc, bc, bc, c, c","a, a, ab, ab, abc, bc, bc, c","a, ab, abc, abc, abc, bc, bc, bc, c", "a, ab, ab, bc, bc, c, c, c", "a, a, a, a, a, b, b, b", "a, a, a, a, a, a, a, a", "a,a,ab,ab,ab,ab,bc,c")
+data.strains.maize <-  data.frame(maize.name, var.name.maize, posthoc.maize,maize.groups, strain.maize)
 
 data.strains.maize <- data.strains.maize %>% 
   rename("Crop" = maize.name,
           "Variable" = var.name.maize,
           "Post-hoc analysis" = posthoc.maize,
+         "Groups"= maize.groups,
           "Optimal strain" = strain.maize)
-kbl(data.strains.maize) %>% 
+MaizeTable <- kbl(data.strains.maize) %>% 
   kable_styling(bootstrap_options = c("hover"))%>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
-  footnote(general = "Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.", general_title = "")
+  footnote(general = "Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
 
+MaizeTable
 ```
 
 ```{r SOYBEAN STRAINS}
-#Soy
-strain.soy <- c("LSM_179","LSM_179", "None","None","None", "LSM_24", "None", "LSM_24", "None", "LSM_14/LSM_24/LSM_62", "LSM_183/LSM_179","None", "None","None","None")
-posthoc.soy <- c("Tukey", "Duncan","Tukey", "Duncan","Tukey", "Duncan","Tukey", "Duncan","Kruskal-Wallis","Kruskal-Wallis","Kruskal-Wallis","Tukey", "Duncan","Tukey", "Duncan" )
-var.name.soy <- c("Plant Height", "Plant Height", "Shoot dry mass","Shoot dry mass", "Root dry mass", "Root dry mass", "Total dry mass", "Total dry mass", "P soil", "P shoot", "P root","N shoot", "N shoot", "N root", "N root" )
-soy.name <-  c(rep("Soybean", 15))
-
-data.strains.soy <-  data.frame(soy.name, var.name.soy, posthoc.soy, strain.soy)
+strain.soy <- c("LSM_179", "NA", "NA",  "NA", "All", "LSM_14/LSM_24/LSM_62", "LSM_183/LSM_179", "NA","NA")
+posthoc.soy <- c("Duncan", "Duncan", "Duncan", "Duncan","Kruskal-Wallis","Kruskal-Wallis","Kruskal-Wallis", "Duncan", "Duncan" )
+var.name.soy <- c("Plant Height",  "Shoot dry mass","Root dry mass",  "Total dry mass",  "P soil", "P shoot", "P root","N shoot",  "N root" )
+soy.name <-  c(rep("Soybean", 9))
+soy.groups <- c("a, ab, ab, abc, abc, bc, bc, c", "a, a, a, a, a, a, a, a", "a, a, a, a, a, a, a, a", "a, a, a, a, a, a, a, a", "a, a, a, a, a, a, a, a", "a, a, a, ab, ab, ab, ab, b", "a, a, ab, ab, ab, ab, ab, b", "a, a, a, a, a, a, a, a", "a, a, a, a, a, a, a, a")
+data.strains.soy <-  data.frame(soy.name, var.name.soy, posthoc.soy, soy.groups, strain.soy)
 
 data.strains.soy <- data.strains.soy %>% 
   rename("Crop" = soy.name,
          "Variable" = var.name.soy,
          "Post-hoc analysis" = posthoc.soy,
          "Optimal strain" = strain.soy)
-kbl(data.strains.soy) %>% 
+SoybeanTable <- kbl(data.strains.soy) %>% 
   kable_styling(bootstrap_options = c("hover"))%>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
-  footnote(general = "Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, Tukey or Duncan analysis.", general_title = "")
+  footnote(general = "Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
 
+SoybeanTable
 ```
 
 5) Summary of the results: 
