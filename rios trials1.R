@@ -34,6 +34,8 @@ Tukey.Bean5=HSD.test(anovabean5,"D_Bean[[1]]", group=TRUE, alpha=0.05)
 Tukey.Bean5$groups
 Tukey.Bean6=HSD.test(anovabean6,"D_Bean[[1]]", group=TRUE, alpha=0.05)
 Tukey.Bean6$groups
+Tukey.Bean8=HSD.test(anovabean8,"D_Bean[[1]]", group=TRUE, alpha=0.05)
+Tukey.Bean8$groups
 Tukey.Bean9=HSD.test(anovabean9,"D_Bean[[1]]", group=TRUE, alpha=0.05)
 Tukey.Bean9$groups
 Tukey.Bean10=HSD.test(anovabean10,"D_Bean[[1]]", group=TRUE, alpha=0.05)
@@ -94,6 +96,8 @@ Duncan.Bean5 <- duncan.test(anovabean5,"D_Bean[[1]]")
 Duncan.Bean5$groups
 Duncan.Bean6 <- duncan.test(anovabean6,"D_Bean[[1]]")
 Duncan.Bean6$groups
+Duncan.Bean8 <- duncan.test(anovabean8,"D_Bean[[1]]")
+Duncan.Bean8$groups
 Duncan.Bean9 <- duncan.test(anovabean9,"D_Bean[[1]]")
 Duncan.Bean9$groups
 Duncan.Bean10 <- duncan.test(anovabean10,"D_Bean[[1]]")
@@ -113,7 +117,6 @@ Duncan.Maize10 <- duncan.test(anovamaize10,"D_Maize[[1]]")
 Duncan.Maize10$groups
 Duncan.Maize11 <- duncan.test(anovamaize11,"D_Maize[[1]]")
 Duncan.Maize11$groups
-
 
 
 
