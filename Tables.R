@@ -4,7 +4,7 @@
 
 #### required package:
 library(tidyverse)
-install.packages("kableExtra")
+#install.packages("kableExtra")
 library(kableExtra)
 
 ##ANOVA results and NORMALITY (shapiro)
@@ -57,7 +57,7 @@ data.strains.beans <-  data.strains.beans %>%
          "Post-hoc analysis" = posthoc.bean,
          "Groups"= bean.groups,
          "Optimal strain" = strain.bean)
-kbl(data.strains.beans) %>% 
+BeanTable <- kbl(data.strains.beans) %>% 
   kable_styling(bootstrap_options = c("hover"))%>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
@@ -78,7 +78,7 @@ data.strains.maize <- data.strains.maize %>%
           "Post-hoc analysis" = posthoc.maize,
          "Groups"= maize.groups,
           "Optimal strain" = strain.maize)
-kbl(data.strains.maize) %>% 
+MaizeTable <- kbl(data.strains.maize) %>% 
   kable_styling(bootstrap_options = c("hover"))%>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
@@ -98,10 +98,11 @@ data.strains.soy <- data.strains.soy %>%
          "Variable" = var.name.soy,
          "Post-hoc analysis" = posthoc.soy,
          "Optimal strain" = strain.soy)
-kbl(data.strains.soy) %>% 
+SoybeanTable <- kbl(data.strains.soy) %>% 
   kable_styling(bootstrap_options = c("hover"))%>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
   footnote(general = "Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
 
+SoybeanTable
