@@ -36,7 +36,7 @@ max.overlaps?
 
 #Biplot about crops
 factoextra::fviz_pca_biplot(C_pca,
-                           col.ind = groups, # color by groups
+                           col.ind = groups_c, # color by groups
                            palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
                            addEllipses = TRUE, # Concentration ellipses
                            ellipse.type = "confidence",
