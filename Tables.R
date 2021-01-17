@@ -8,38 +8,44 @@ library(tidyverse)
 library(kableExtra)
 
 ##ANOVA results and NORMALITY (shapiro)
+
 anovaresult.crop <- rep(c("Bean", "Maize", "Soybean"), each = 9)
-anovaresult.variable <- rep(c(names(D_GH[,3:11])), 3)
-anovaresult.significance.bean <-  c("<0.05", "<0.1", ">0.1", ">0.1", "<0.1", "<0.001", ">0.1", "<0.1", ">0.1")
-anovaresult.significance.maize <- c("<0.001", "<0.01", "<0.05", "<0.01", "<0.05", "<0.01", "<0.001", ">0.1", "<0.05")
-anovaresult.significance.soy <-  c("<0.05", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1", ">0.1")
-anovaresult.significance <- c(anovaresult.significance.bean, anovaresult.significance.maize, anovaresult.significance.soy)
+
+anovaresult.variable <- rep(c(names(D_GH[,3:11])), 3) 
+
+pvalue.bean <-c("0.0124 *", "0.0788", "0.628", "0.203", "0.061", "9.04e-10 ***", "0.623", "0.0245 *", "0.462")
+pvalue.maize <- c("9.53e-07 ***", "0.0064 **", "0.0129 *", "0.00552 **", "0.0274 *" , "0.00933 **", "0.000103 ***","0.637", "0.0209 *")
+pvalue.soy <- c("0.0311 *", "0.465", "0.216", "0.245", "0.94", "0.347", "0.232", "0.557", "0.7")
+pvalue <- c(pvalue.bean, pvalue.maize, pvalue.soy)
+
 normality.result.bean <- c("Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes")
 normality.result.maize <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
 normality.result.soy <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
 normality.result <-  c(normality.result.bean, normality.result.maize, normality.result.soy)
+
 homocedasticity.result.bean <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "Yes", "Yes")
 homocedasticity.result.maize <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
 homocedasticity.result.soy <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
 homocedasticity.result <- c(homocedasticity.result.bean, homocedasticity.result.maize, homocedasticity.result.soy)
 
-anova.dataframe <-  data.frame(anovaresult.crop, anovaresult.variable, anovaresult.significance, normality.result, homocedasticity.result)
+anova.dataframe <-  data.frame(anovaresult.crop,anovaresult.variable,  pvalue, normality.result, homocedasticity.result)
 
 anova.dataframe <-  anova.dataframe %>% 
   rename(Crop = anovaresult.crop,
          Variable = anovaresult.variable,
-         "ANOVA   *a" = anovaresult.significance,
+         "ANOVA   *a" = pvalue,
          "Normality   *b" = normality.result,
          "Homocedasticity  *c"= homocedasticity.result)
-kbl(anova.dataframe, align = "c") %>%
+
+AnovaTable <- kbl(anova.dataframe, align = "c") %>%
   collapse_rows(1, valign = "middle") %>% 
-  column_spec(2, color= ifelse(anovaresult.significance == "<0.1" | anovaresult.significance == ">0.1", "red", "black")) %>% 
+  column_spec(2, color= ifelse(pvalue == "0.0788"| pvalue == "0.628"| pvalue == "0.203"| pvalue == "0.061"| pvalue == "0.623"| pvalue == "0.462"| pvalue =="0.637"| pvalue == "0.465"| pvalue == "0.216"| pvalue == "0.245"| pvalue == "0.94"| pvalue == "0.347"| pvalue == "0.232"| pvalue == "0.557"| pvalue == "0.7", "red", "black")) %>% 
   kable_material(c("striped", "hover")) %>% 
   footnote(general = "Table with the results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
-           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing low signifficance. 
+           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing not signifficant data. *: 95% confidance; **: 99%; ***: 99.9%
            b: Normality tested with Shapiro-Wilk test.*
            c: Homocedasticity tested with the Breusch-Pagan test", general_title = "")
-
+AnovaTable
 ##Strain selection dataframe and table
 
 #Bean
@@ -63,6 +69,7 @@ BeanTable <- kbl(data.strains.beans) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1, valign = "middle") %>% 
   footnote(general = "Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable", general_title = "")
+BeanTable
 
 #Maize
 strain.maize <-  c("LSM_65","LSM_65","Control","Control/LSM_65", "LSM_24", "LSM_24", "Control/LSM_65/LSM_14/LSM_24/LSM_62", "NA","LSM_65/LSM_24")
@@ -84,6 +91,7 @@ MaizeTable <- kbl(data.strains.maize) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
   footnote(general = "Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
+MaizeTable
 
 #Soy
 strain.soy <- c("LSM_179", "NA", "NA",  "NA", "All", "LSM_14/LSM_24/LSM_62", "LSM_183/LSM_179", "NA","NA")
