@@ -24,6 +24,8 @@ summary(anovabean10)
 anovabean11 <- aov(D_Bean[[11]]~D_Bean[[1]], data = D_Bean)
 summary(anovabean11)
 
+
+
 ## the same can be done saving every anova in a list
 listbean <- vector(mode = "list", length = 9)
 i <- 1
@@ -248,11 +250,15 @@ bptest(anovaall11)
 #NON PARAMETRIC KRUSKAL-WALLIS TEST FOR THOSE WHO DO NOT FOLLOW NORMALITY
 
 #Kruskal-Wallis for Bean (columns 4 and 7)
-kruskalbean4 <- kruskal(D_Bean[[4]],D_Bean[[1]], alpha = 0.05)
+kruskalbean3 <- kruskal(D_Bean[[3]],D_Bean[[1]], alpha = 0.05)
 kruskalbean7 <- kruskal(D_Bean[[7]],D_Bean[[1]], alpha = 0.05)
+kruskalbean8 <- kruskal(D_Bean[[8]],D_Bean[[1]], alpha = 0.05)
+kruskalbean9 <- kruskal(D_Bean[[9]],D_Bean[[1]], alpha = 0.05)
 
-kruskalbean4
+kruskalbean3
+kruskalbean7
 kruskalbean8
+kruskalbean9
 
 #Kruskal-Wallis for Soy (columns 7,8 and 9)
 kruskalsoy7 <- kruskal(D_Soy[[7]],D_Soy[[1]], alpha = 0.05)

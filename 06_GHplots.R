@@ -75,7 +75,7 @@ Bplot_Nroot
 
 #Plottings for Soy
 
-Splot_Height <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`Plant high (Mean - cm)`, fill=Duncan.Bean3$groups[`Treatments (strains)`, "groups"])) +
+Splot_Height <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`Plant high (Mean - cm)`, fill=Duncan.Soy3$groups[`Treatments (strains)`, "groups"])) +
   geom_boxplot()+ labs(fill = "Strain groups") +xlab('strain') +ylab('mean')
 Splot_Height
 
@@ -177,4 +177,5 @@ Mplot_Pshoot
 Mplot_Proot
 Mplot_Nshoot
 Mplot_Nroot
+
 
