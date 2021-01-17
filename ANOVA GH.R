@@ -248,9 +248,11 @@ bptest(anovaall11)
 #NON PARAMETRIC KRUSKAL-WALLIS TEST FOR THOSE WHO DO NOT FOLLOW NORMALITY
 
 #Kruskal-Wallis for Bean (columns 4 and 7)
+kruskalbean3 <- kruskal(D_Bean[[3]],D_Bean[[1]], alpha = 0.05)
 kruskalbean4 <- kruskal(D_Bean[[4]],D_Bean[[1]], alpha = 0.05)
 kruskalbean7 <- kruskal(D_Bean[[7]],D_Bean[[1]], alpha = 0.05)
 
+kruskalbean3
 kruskalbean4
 kruskalbean8
 
