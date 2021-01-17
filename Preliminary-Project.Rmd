@@ -54,7 +54,9 @@ library(tidyverse)
   
 2. Evaluate the performance of the strains selected by the authors by doing statistical analysis using the data provided. 
 
-The F test only compares two variables at a time, an Analisis of Variance (ANOVA) was done instead for both datasets
+3. Carry out a Principal Components Analisys (PCA) and a Linear Discriminant Analisys (LDA) in order to adress__________A Y U D A ____________
+
+
 
 ### Data download and "Data" folder creation
 ```{r}
