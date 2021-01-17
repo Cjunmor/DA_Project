@@ -1,7 +1,8 @@
 ---
-title: "PROJECT"
+title: "Growth-Promoting Fungi Evaluation"
 author: "Carolina Juncá, Riyad Hilal and Ignacio Romero"
-date: "15/12/2020"
+
+date: "18/01/2021"
 output:
   html_document:
     code_folding: hide
@@ -14,11 +15,11 @@ knitr::opts_chunk$set
 
 ## Introduction
 
-In this project, we re-analyze the results obtained by Baron et al. in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](https://peerj.com/articles/9005/) using RStudio. The authors test the performances of different fungi obtained from a soil sample while being used as plant growth-promoting organisms. 
+In typically intensive crops like bean, maize or soybean are able to reach high yields thanks to the abusive use of pesticides and fertilizers. In an attempt to manage agriculture in a more sustainable way, Noemi Carla Baron<sup>1</sup> , Andressa de Souza Pollo<sup>2</sup> and  Everlon Cid Rigobelo<sup>1</sup> in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](https://peerj.com/articles/9005/) test the performance of *Purpureocillium lilacinum, Purpureocillium lavendulum* and *Metarhizium marquandii* as potential bioinoculants that might replace the current products. 
 
-First, their IAA and P solubilization is tested in order to address the more appropriate strains to be tested in green house experiment. 
+In order to do so, Baron et al. isolated the strains used from soil samples. All the different strains where screend for their ability to solubilize phosphorus (P) and produce indolacetic acid (IAA). Those who were more promising were tested in greenhouse inoculation experiments, where Growth promotion parameters including plant height, dry mass and contents of P and nitrogen (N) in the plants and in the rhizospheric soil were assessed. As statistical analysis software AGROESTAT was used. 
 
-After that, the second part consists in the test of plan-growth related parameters in presence of the strains chosen in the first part. 
+In this project, we reanalyze and reformulate the results obtained by the authors using RStudio and  different packages that allow us to carry out any analysis and display the output in a more convenient way. 
 
 The packages used are the next: 
 
@@ -49,11 +50,9 @@ library(tidyverse)
 
 ## Objectives
 
-1. Redo the statistical analysis from the article with R instead of AGROESTAT.
-  a. F and Tukey test for the stain P and IAA values
-  b. F and Duncan test for the Greenhouse data
-2. Carry out a Principal Components Analysis (PCA) in order to characterize the data.
-3.  Find correlations between fungi strain and plant species.
+1. Select which of the strains provided are the most promising to test in greenhouse experiment according to their P solubilization and IAA production.
+  
+2. Evaluate the performance of the strains selected by the authors by doing statistical analysis using the data provided. 
 
 The F test only compares two variables at a time, an Analisis of Variance (ANOVA) was done instead for both datasets
 
