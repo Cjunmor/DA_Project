@@ -48,6 +48,7 @@ library(tidyr)
 2. Carry out a Principal Components Analysis (PCA) in order to characterize the data.
 3.  Find correlations between fungi strain and plant species.
 
+The F test only compares two variables at a time, an Analisis of Variance (ANOVA) was done instead for both datasets
 
 ### Data download and "Data" folder creation
 ```{r}
@@ -124,7 +125,7 @@ D_GH <- union(D_GH, D_Soy)
 
 ## Part two: Biochemical parametres testing
 
-The Idol Acetic Acid (IAA) produced and the Phosphorous solubilized by each strain was tested in order to choose the ones with the highest amounts. In the article an F and Tukey tests were done to figure this out. Nevertheless, although the IAA data was homeoscedastic, when the residuals of the IAA concentrations were tested for normality, it was found that they do not follow a normal distribution and thus the F and Tukey tests could not be conducted if a data transformation process wasn't made first.
+The Idol Acetic Acid (IAA) produced and the Phosphorous solubilized by each strain was tested in order to choose the ones with the highest amounts. In the article an F and Tukey tests were done to figure this out. Nevertheless, although the IAA data was homeoscedastic, when the residuals of the IAA concentrations were tested for normality, it was found that their residues do not follow a normal distribution and thus the F and Tukey tests could not be conducted if a data transformation process wasn't made first.
 
 ### Idol Acetic Acid concentrations (IAA)
 Some tidying up of the data frame was done in order not to have errors pop up when running the code.
@@ -142,6 +143,8 @@ ANOVA_IAA<- aov (D_IAA$IAA_pg ~ D_IAA$LSM_strain, data= D_IAA)
 print(summary(ANOVA_IAA))
 nortest::lillie.test(ANOVA_IAA$residuals)
 ```
+We chose to do the Lillie test because...
+
 
 Afterwards, homeoscedasticity was tested
 ````{r Breusch-Pagan test, echo = TRUE}
@@ -172,6 +175,11 @@ T_nIAA <- HSD.test(ANOVA_n_IAA,'n_D_IAA$D_IAA.LSM_strain', group = TRUE, alpha =
 T_nIAA$groups
 plot(T_nIAA)
 ```
+The analysis results in 5 strains being in the first and second groups, the (65,62,68,179,183)
+
+
+
+They chose strains belonging to the groups A, B and C (65,62,68,179,183)
 
 ### Solubilized Phosphorous (P)
 Like in the other dataset, some tidying up of the data frame was done in order not to have errors pop up when running the code.
@@ -189,15 +197,21 @@ nortest::lillie.test(ANOVA_P$residuals)
 
 ```
 
-As they were normal and the differences between strains were significant, a Tukey test was conducted.
+As the residuals were normal and the differences between strains were significant, a Tukey test was conducted.
 ````{r P Tukey, echo = TRUE, out.width= "170%"}
 T_P <- HSD.test(ANOVA_P,'D_Phosphorus$LSM_strain', group = TRUE, alpha = 0.05)
 T_P$groups
 plot(T_P)
 
 ```
+In out tukey test, the strains were only separated into three groups, only strain 24 was completely separated from the other strains with the higher concentrations. So with our analysis we can not justify statistically, choosing the first 3 strains with higher concentrations.
 
-The strains with the most P solubilization and IAA production correspond to the ones in the article.
+Additionally, the variance of strain 24 is very big, more repetitions would be needed in order to confidently deem it better than the others. If the upper extreme value is omitted, LSM 24 would belong to the same group as the other strains.
+
+
+
+They chose the A and AB groups (strains 24,65 and 14)
+
 
 ## Part three: Greenhouse Expermient testing 
 
@@ -666,3 +680,181 @@ Note that, when the table says "All" means that all the strains are in the same 
 
 **Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root. 
 
+##PCA
+```{r}
+#install.packages('FactoMineR')
+#install.packages('factoextra')
+
+library(factoextra)
+library(ggplot2)
+
+#Adding column for individual identification of points based on the treatment
+D_GH$Name <- paste(D_GH$`Treatments (strains)`,"_",D_GH$`Repetition (pots)`)
+      #eliminate this name column
+
+#Data for PCA 
+#D_PCA <- D_GH [-2]
+#D_PCA <- D_GH [3:11]
+#data (D_GH)
+
+#General PCA
+C_pca <- prcomp(D_GH [3:11], scale = TRUE)
+factoextra::fviz_eig(C_pca)
+factoextra::fviz_pca_ind(C_pca,
+             col.ind = "cos2", # Color by the quality of representation
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+             repel = TRUE     # Avoid text overlapping
+)
+```
+
+PCA with colored crops
+```{r}
+#PCA with colored crops
+groups_c <- as.factor(D_GH$Cropname)
+factoextra::fviz_pca_ind(C_pca,
+             col.ind = groups_c, # color by groups
+             palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+             addEllipses = TRUE, # Concentration ellipses
+             ellipse.type = "confidence",
+             legend.title = "Crops",
+             repel = TRUE
+)
+```
+The x axis separes very nicely the crops from each other
+
+
+Biplot about crops
+```{r}
+factoextra::fviz_pca_biplot(C_pca,
+                           col.ind = groups_c,#color by groups
+                           palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                           addEllipses = TRUE, # Concentration ellipses
+                           ellipse.type = "confidence",
+                           legend.title = "Crops",
+                           repel = TRUE
+)
+#Opposite direction arrows indicate negative correlations between the variables
+```
+PCA for each crop (dif colors), discriminating treatments with names
+```{r}
+D1 <- D_GH [, 3:11]
+
+rownames(D1) <- paste0(D_GH$Cropname, D_GH$Name)
+T_pca <- prcomp(D1, scale = TRUE)
+factoextra::fviz_pca_ind(T_pca,
+                         col.ind = groups_c,
+                         palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         addEllipses = TRUE, # Concentration ellipses
+                         ellipse.type = "confidence",
+                         legend.title = "Treatments",
+                         repel = TRUE
+)
+
+#PCA1 written formula
+T_pca$rotation
+formula1 <- "PC1 = "
+a <-  as.data.frame(T_pca$rotation)
+for (i in 1:length(a$PC1)) {
+  if (a$PC1[i] >= 0) formula1 <- paste(formula1, "+") 
+  formula1 <- paste(formula1, a$PC1[i], rownames(a)[i])
+}
+  
+```
+
+PCA with different colored treatments (shows that we need to subset each crop)
+```{r}
+groups_t <- as.factor(D_GH$`Treatments (strains)`)
+factoextra::fviz_pca_ind(C_pca,geom ="point",
+                         col.ind = groups_t, # color by groups
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         #addEllipses = TRUE, # Concentration ellipses
+                         #ellipse.type = "confidence",
+                         legend.title = "Strains",
+                         repel = FALSE
+)
+```
+The PCA doesn't divide the points by strains
+
+Subset each species with each name
+Bean
+```{r}
+D_GHb<- D_GH[,c(3:13)]
+D_GHb <- D_GHb[D_GHb$Cropname == "Bean",]
+Name <- D_GHb$Name
+D_GHb <- D_GHb [1:9]
+rownames(D_GHb)<-Name
+B_pca <- prcomp(D_GHb, scale = TRUE)
+factoextra::fviz_pca_ind(B_pca,
+                         geom = c("point", "text"),
+                         #col.ind = groups_t,
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         addEllipses = TRUE, # Concentration ellipses
+                         ellipse.type = "confidence",
+                         #legend.title = "Treatments",
+                         repel = FALSE
+)
+
+factoextra::fviz_pca_var(B_pca,
+                         col.var = "contrib", # Color by contributions to the PC
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE
+)
+```
+
+Soybean
+```{r}
+D_GHs<- D_GH[,c(3:13)]
+D_GHs<- D_GHs[D_GHs$Cropname == "Soybean",]
+Name <- D_GHs$Name
+D_GHs <- D_GHs [1:9]
+rownames(D_GHs)<-Name
+S_pca <- prcomp(D_GHs, scale = TRUE)
+factoextra::fviz_pca_ind(S_pca,
+                         geom = c("point", "text"),
+                         #col.ind = groups_t,
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         #addEllipses = TRUE, # Concentration ellipses
+                         #ellipse.type = "confidence",
+                         #legend.title = "Treatments",
+                         repel = FALSE
+)
+
+factoextra::fviz_pca_var(S_pca,
+                         col.var = "contrib", # Color by contributions to the PC
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE
+)
+
+```
+
+Maize
+```{r}
+D_GHm<- D_GH[,c(3:13)]
+D_GHm <- D_GHm[D_GHm$Cropname == "Maize",]
+Name <- D_GHm$Name
+D_GHm <- D_GHm [1:9]
+rownames(D_GHm)<-Name
+M_pca <- prcomp(D_GHm, scale = TRUE)
+factoextra::fviz_pca_ind(M_pca,
+                         geom = c("point", "text"),
+                         #col.ind = groups_t,
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         #addEllipses = TRUE, # Concentration ellipses
+                         #ellipse.type = "confidence",
+                         #legend.title = "Treatments",
+                         repel = FALSE
+)
+
+factoextra::fviz_pca_var(M_pca,
+                         col.var = "contrib", # Color by contributions to the PC
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE
+)
+```
+Strains are not separated even if do a PCA for each crop.
+
+Height and dry mass seem to be the parameters that separate the strains the most in all crops
+
+##Moderator analysis
+
+##Discriminant analysis
