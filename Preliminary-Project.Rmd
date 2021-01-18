@@ -172,8 +172,20 @@ lmtest::bptest(ANOVA_IAA)
 As they were not normal or homeoscedastic, Kruskal-Wallis and Holm analyses were carried out, obtaining the following groups:
 ````{r IAA K-W, out.width= "170%"}
 kr <- agricolae::kruskal(D_IAA[2], D_IAA[1], alpha = 0.05, p.adj ="holm", group=TRUE)
-kr$groups
-plot (kr)
+# kr$groups
+# plot (kr)
+D_IAA$names <- paste0("LSM ", D_IAA$LSM_strain ) #Add column with strain name
+kr_p <- ggplot(D_IAA, aes(x=names, y=IAA_pg, fill=kr$groups[LSM_strain, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Indolacetic acid produced (microg/g)')+
+  labs(title = "Indolacetic acid produced by each strain (Non Parametric Analysis)",
+       caption= "Graph 1: Indolacetic acid concentrations Holms groups (microgram per gram of dried micelium)")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0), 
+        axis.text.x = element_text(angle = 90))
+kr_p
 
 ```
 
@@ -191,14 +203,41 @@ lmtest::bptest(ANOVA_n_IAA)
 So ANOVA and Tukey test  could be done: 
 ````{r IAA Tukey, out.width= "170%"}
 T_nIAA <- HSD.test(ANOVA_n_IAA,'n_D_IAA$D_IAA.LSM_strain', group = TRUE, alpha = 0.05)
-T_nIAA$groups
-plot(T_nIAA)
+# T_nIAA$groups
+# plot(T_nIAA)
+
+n_D_IAA$names <- paste0("LSM ", n_D_IAA$D_IAA.LSM_strain ) #Add column with strain name
+
+
+Tn_p <- ggplot(n_D_IAA, aes(x=names, y=n_IAA, fill=T_nIAA$groups[D_IAA.LSM_strain, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Indolacetic acid produced (microg/g)')+
+  labs(title = "Indolacetic acid produced by each strain (Parametric Analysis)",
+       caption= "Graph 2: Indolacetic acid concentrations Tukey groups (microgram per gram of dried micelium)")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0), 
+        axis.text.x = element_text(angle = 90))
+Tn_p
 
 ```
 Also, Duncan test was done, in order to learn if there is some differences with Tukey's test:
 ```{r IAA Duncan, out.width= "170%"}
 D_nIAA <- duncan.test(ANOVA_n_IAA,'n_D_IAA$D_IAA.LSM_strain')
-plot(D_nIAA)
+# plot(D_nIAA)
+
+Dn_p <- ggplot(n_D_IAA, aes(x=names, y=n_IAA, fill=D_nIAA$groups[D_IAA.LSM_strain, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Indolacetic acid produced (microg/g)')+
+  labs(title = "Indolacetic acid produced by each strain (Parametric Analysis)",
+       caption= "Graph 3: Indolacetic acid concentrations Duncan groups (microgram per gram of dried micelium)")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0), 
+        axis.text.x = element_text(angle = 90))
+Dn_p
 ```
 As expected, Duncan's test is more strict when grouping, meaning that considers that two values are not in the same group, when Tukey's tags them with the same letter. 
 
@@ -228,9 +267,37 @@ As the residuals were normal and the differences between strains were significan
 T_P <- HSD.test(ANOVA_P,'D_Phosphorus$LSM_strain', group = TRUE, alpha = 0.05)
 T_P$groups
 plot(T_P)
+<<<<<<< HEAD
 D_P <- duncan.test(ANOVA_P,'D_Phosphorus$LSM_strain')
 D_P$groups
 plot(D_P)
+=======
+# D_P <- duncan.test(ANOVA_P,'D_Phosphorus$LSM_strain')
+# D_P$groups
+# plot(D_P)
+
+
+# D_Phosphorus$names <- paste0("LSM ", D_Phosphorus$LSM_strain ) #Add column with strain name
+# 
+# TP_p <- ggplot(D_Phosphorus, aes(x=names, y=P_pg, fill=T_P$groups[LSM_strain, "groups"])) +
+#   geom_boxplot()+
+#   labs(fill = "Strain groups") +
+#   xlab('Strain') +
+#   ylab('Phosphorus solubilized (microg/g)')+
+#   labs(title = "Phosphorus solubilized by each strain (Parametric Analysis)",
+#        caption= "Graph 3: Solubilize phosphorus concentrations, Duncan groups (microgram per gram of dried micelium)")+
+#   theme(plot.title = element_text(hjust = 0.5),
+#         plot.caption = element_text(hjust = 0),
+#         axis.text.x = element_text(angle = 90))
+# TP_p
+
+
+cp1 <- colorRampPalette(c ("maroon1", "orange")) #Color palette
+dev.new (width=17, height= 5)
+plot.new()
+plot(T_P, main = "Solubilized P concentrations per strain (Duncan)", xlab = "Strain", ylab = "Solubilized P (microg/g)", col = cp1(3), las = 2, cex = 1.1)
+
+>>>>>>> 1627324ff90f0af2f3d5eabb11e0fd7d141fe2d8
 
 ```
 As seen in the Duncan's test, only the strain 24 highlights from the group. The rest of them slowly decrease in solubilized P production. This analysis does not provide enough resolution to choose those strains with a better potential performance. The autors of the article chose the first 3, belonging to the a, ab and abc groups: LSM 24, 65 and 14, in order. 
@@ -979,8 +1046,15 @@ Splot_Proot
 ## Discussion
 
 ## Conclussion
+<<<<<<< HEAD
 
 
 
 
+=======
+
+
+
+
+>>>>>>> 1627324ff90f0af2f3d5eabb11e0fd7d141fe2d8
 
