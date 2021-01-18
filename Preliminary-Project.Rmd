@@ -19,7 +19,7 @@ In typically intensive crops like bean, maize or soybean are able to reach high 
 
 In order to do so, Baron et al. isolated the strains used from soil samples. All the different strains where screend for their ability to solubilize phosphorus (P) and produce indolacetic acid (IAA). Those who were more promising were tested in greenhouse inoculation experiments, where Growth promotion parameters including plant height, dry mass and contents of P and nitrogen (N) in the plants and in the rhizospheric soil were assessed. As statistical analysis software AGROESTAT was used. 
 
-In this project, we reanalyze and reformulate the results obtained by the authors using RStudio and  different packages that allow us to carry out any analysis and display the output in a more convenient way. 
+In this project, the results obtained by the authors is reanalyzed and reformulated using RStudio and  different packages that allow to carry out any analysis and display the output in a more convenient way. 
 
 The packages used are the next: 
 
@@ -46,6 +46,8 @@ library(tidyr)
 library(kableExtra)
 #install.packages("tidyverse")
 library(tidyverse)
+#install.packages('factoextra')
+library(factoextra)
 ```
 
 ## Objectives
@@ -54,12 +56,16 @@ library(tidyverse)
   
 2. Evaluate the performance of the strains selected by the authors by doing statistical analysis using the data provided. 
 
-3. Carry out a Principal Components Analisys (PCA) and a Linear Discriminant Analisys (LDA) in order to adress__________A Y U D A ____________
+3. Carry out a Principal Components Analysis (PCA) and a Linear Discriminant Analisys (LDA) in order to adress ___________ AYUDA __________
 
 
 
-### Data download and "Data" folder creation
-```{r}
+## Data preparation
+
+First of all, working in RStudio requires the importation of the data to the working environment and its shaping into a suitable data frame that allows its management and the utilization of the different tools that the software provides. 
+
+The code for the importation creates a folder called "Data" where tables with raw data will be downloaded directly from the original article.
+```{r Data importation}
 
 #Creating the folder "Data" if it doesn't exist
 D <- "Data"
@@ -74,10 +80,7 @@ xl_2 <- "https://dfzljdn9uc3pi.cloudfront.net/2020/9005/1/Raw_Data_Greenhouse_te
 download.file(xl_2, "Data/Data_GH.xlsx", mode = "wb")
 ```
 
-
-## Part one: Data organisation
-
-In this part, the data are transformed and organized in order to allow the use of RStudio. 
+Different organized data frames where created from the raw data. This data frames contain the different strains tested , the repetitions and the biochemical or growth parameters. 
 
 ```{r Data organisation }
 
@@ -132,12 +135,14 @@ D_GH <- union(D_Bean, D_Maize) #check 2 lines between each merged dataframe, uni
 D_GH <- union(D_GH, D_Soy)
 ```
 
-## Part two: Biochemical parametres testing
+Once all the data is shaped and organized the analysis can begin. 
 
-The Idol Acetic Acid (IAA) produced and the Phosphorous solubilized by each strain was tested in order to choose the ones with the highest amounts. In the article an F and Tukey tests were done to figure this out. Nevertheless, although the IAA data was homeoscedastic, when the residuals of the IAA concentrations were tested for normality, it was found that their residues do not follow a normal distribution and thus the F and Tukey tests could not be conducted if a data transformation process wasn't made first.
+## Strain selection method
 
-### Idol Acetic Acid concentrations (IAA)
-Some tidying up of the data frame was done in order not to have errors pop up when running the code.
+The Idol Acetic Acid (IAA) produced and the Phosphorous solubilized by each strain was tested in order to choose the ones with the highest amounts. In the original article, F and Tukey tests were done to figure this out. Nevertheless, although the IAA data was homeoscedastic, when the residuals of the IAA concentrations were tested for normality, it was found that their residues do not follow a normal distribution and thus the F and Tukey tests could not be conducted if a data transformation process wasn't made first.
+
+### Idolacetic acid production:
+Some tidying up of the data frame was done in order avoid errors when running the code.
 ````{r IAA tidy  }
 D_IAA <- D_IndolA[-which(names(D_IndolA) == "Repetition")]
 names(D_IAA)[names(D_IAA) == "µg AIA/ g biomass"] <- "IAA_pg" 
@@ -145,29 +150,30 @@ names(D_IAA)[names(D_IAA) == "LSM strain"] <- "LSM_strain"
 
 ```
 
-Normality was tested
-````{r IAA normality  }
+Normality was tested and as seen below, there are significant differences in the production of IAA among the strains:
+````{r IAA ANOVA, message = FALSE, warning = FALSE, results= "show" }
 D_IAA$LSM_strain <- as.factor(D_IAA$LSM_strain)
 ANOVA_IAA<- aov (D_IAA$IAA_pg ~ D_IAA$LSM_strain, data= D_IAA)
 print(summary(ANOVA_IAA))
+```
+ Lillie test Was chosen to do the in order to test the normality because...
+```{r IAA Lillie test, message = FALSE, warning = FALSE, results= "show"}
 nortest::lillie.test(ANOVA_IAA$residuals)
 ```
-We chose to do the Lillie test because...
-
-
-Afterwards, homeoscedasticity was tested
-````{r Breusch-Pagan test  }
+Afterwards, homoscedasticity was tested using the Breusch-Pagan test:
+````{r Breusch-Pagan test , message = FALSE, warning = FALSE, results= "show" }
 lmtest::bptest(ANOVA_IAA)
 ```
 
-As they were not normal or homeoscedastic, Kruskal-Wallis and Holm analyses were carried out.
+As they were not normal or homeoscedastic, Kruskal-Wallis and Holm analyses were carried out, obtaining the following groups:
 ````{r IAA K-W, out.width= "170%"}
 kr <- agricolae::kruskal(D_IAA[2], D_IAA[1], alpha = 0.05, p.adj ="holm", group=TRUE)
+kr$groups
 plot (kr)
 
 ```
 
-If we were to transform the data with a log function we would get normal residuals and also a homeoscedastic data set
+If the data were transformed with a logarithmic function normal residual and a homoscedastic data set  would be obtained:
 ```{r IAA transformation}
 n_IAA <- log(D_IAA$IAA_pg)
 n_D_IAA <- data.frame(n_IAA, D_IAA$LSM_strain)
@@ -178,27 +184,34 @@ nortest::lillie.test(ANOVA_n_IAA$residuals)
 lmtest::bptest(ANOVA_n_IAA)
 ```
 
-So we could do ANOVA and Tukey test 
+So ANOVA and Tukey test  could be done: 
 ````{r IAA Tukey, out.width= "170%"}
 T_nIAA <- HSD.test(ANOVA_n_IAA,'n_D_IAA$D_IAA.LSM_strain', group = TRUE, alpha = 0.05)
 T_nIAA$groups
 plot(T_nIAA)
+
 ```
-The analysis results in 5 strains being in the first and second groups, the (65,62,68,179,183)
+Also, Duncan test was done, in order to learn if there is some differences with Tukey's test:
+```{r IAA Duncan, out.width= "170%"}
+D_nIAA <- duncan.test(ANOVA_n_IAA,'n_D_IAA$D_IAA.LSM_strain')
+plot(D_nIAA)
+```
+As expected, Duncan's test is more strict when grouping, meaning that considers that two values are not in the same group, when Tukey's tags them with the same letter. 
+
+The analysis results in 5 strains being in the first and second groups, the LSM 65,62,68,179 and 183, being all of them present in the greenhouse experiments.
 
 
 
-They chose strains belonging to the groups A, B and C (65,62,68,179,183)
+### Solubilized Phosphorous production:
 
-### Solubilized Phosphorous (P)
-Like in the other dataset, some tidying up of the data frame was done in order not to have errors pop up when running the code.
+As done previously some tidying up of the data frame was done in order to avoid errors when running the code.
 ````{r P tidy}
 names(D_Phosphorus)[names(D_Phosphorus) == "µg P/ g biomass"] <- "P_pg" #rename µg P/ g biomass column
 names(D_Phosphorus)[names(D_Phosphorus) == "LSM strain"] <- "LSM_strain" #rename LSM strain column
 
 ```
 
-The data were tested for normality
+The data were tested for normality:
 ````{r P normality test}
 ANOVA_P<- aov (D_Phosphorus$P_pg ~ D_Phosphorus$LSM_strain, data= D_Phosphorus)
 print(summary(ANOVA_P))
@@ -206,27 +219,33 @@ nortest::lillie.test(ANOVA_P$residuals)
 
 ```
 
-As the residuals were normal and the differences between strains were significant, a Tukey test was conducted.
+As the residuals were normal and the differences between strains were significant, a Duncan test was conducted:
 ````{r P Tukey, out.width= "170%"}
-T_P <- HSD.test(ANOVA_P,'D_Phosphorus$LSM_strain', group = TRUE, alpha = 0.05)
-T_P$groups
-plot(T_P)
+
+D_P <- duncan.test(ANOVA_P,'D_Phosphorus$LSM_strain')
+D_P$groups
+plot(D_P)
 
 ```
-In out tukey test, the strains were only separated into three groups, only strain 24 was completely separated from the other strains with the higher concentrations. So with our analysis we can not justify statistically, choosing the first 3 strains with higher concentrations.
+As seen in the Duncan's test, only the strain 24 highlights from the group. The rest of them slowly decrease in solubilized P production. This analysis does not provide enough resolution to choose those strains with a better potential performance. The autors of the article chose the first 3, belonging to the a, ab and abc groups: LSM 24, 65 and 14, in order. 
 
 Additionally, the variance of strain 24 is very big, more repetitions would be needed in order to confidently deem it better than the others. If the upper extreme value is omitted, LSM 24 would belong to the same group as the other strains.
 
+## Strain selection results
+
+As seen above, due to the big amounts of strains that have to be analyzed and compare, is much more useful the Duncan's test than the Tukey's. However, the judgment of the authors remains unclear, since the choose 5 strains according to the IAA production and only 3 from solubilized P, despite the uncertainty of this last. 
+
+In the end, the strains chosen to be analyzed are the following: **LSM 65, 62, 68, 179, 183, 24 and 14.**
 
 
-They chose the A and AB groups (strains 24,65 and 14)
+## Strain evaluation method
 
+A similar process has been followed to identify the most optimal strains in the greenhose experiments. First an ANOVA has been done, taking into account all the different requirements. Then, for those cases in which ANOVA is not possible, the Kruskal-Wallis' test has been done. For the rest of the cases, post hoc analisis was carried out to assess the different grouping options. 
 
-## Part three: Greenhouse Expermient testing 
-
+### ANOVA 
 The greenhouse results are tested in order to find out the effect of the selected strains. First of all, in order to address significant differences, an ANOVA test has been carried out. 
 
-```{r ANOVA, message = FALSE, warning = FALSE, results="hide"}
+```{r ANOVA greenhouse, message = FALSE, warning = FALSE, results="hide"}
 #Anovas for Bean 
 anovabean3 <- aov(D_Bean[[3]]~D_Bean[[1]], data = D_Bean)
 anovabean4 <- aov(D_Bean[[4]]~D_Bean[[1]], data = D_Bean)
@@ -237,17 +256,6 @@ anovabean8 <- aov(D_Bean[[8]]~D_Bean[[1]], data = D_Bean)
 anovabean9 <- aov(D_Bean[[9]]~D_Bean[[1]], data = D_Bean)
 anovabean10 <- aov(D_Bean[[10]]~D_Bean[[1]], data = D_Bean)
 anovabean11 <- aov(D_Bean[[11]]~D_Bean[[1]], data = D_Bean)
-
-#Anova for Soy
-anovasoy3 <- aov(D_Soy[[3]]~D_Soy[[1]], data = D_Soy)
-anovasoy4 <- aov(D_Soy[[4]]~D_Soy[[1]], data = D_Soy)
-anovasoy5 <- aov(D_Soy[[5]]~D_Soy[[1]], data = D_Soy)
-anovasoy6 <- aov(D_Soy[[6]]~D_Soy[[1]], data = D_Soy)
-anovasoy7 <- aov(D_Soy[[7]]~D_Soy[[1]], data = D_Soy)
-anovasoy8 <- aov(D_Soy[[8]]~D_Soy[[1]], data = D_Soy)
-anovasoy9 <- aov(D_Soy[[9]]~D_Soy[[1]], data = D_Soy)
-anovasoy10 <- aov(D_Soy[[10]]~D_Soy[[1]], data = D_Soy)
-anovasoy11 <- aov(D_Soy[[11]]~D_Soy[[1]], data = D_Soy)
 
 #Anova for Maize
 anovamaize3 <- aov(D_Maize[[3]]~D_Maize[[1]], data = D_Maize)
@@ -260,10 +268,20 @@ anovamaize9 <- aov(D_Maize[[9]]~D_Maize[[1]], data = D_Maize)
 anovamaize10 <- aov(D_Maize[[10]]~D_Maize[[1]], data = D_Maize)
 anovamaize11 <- aov(D_Maize[[11]]~D_Maize[[1]], data = D_Maize)
 
+#Anova for Soy
+anovasoy3 <- aov(D_Soy[[3]]~D_Soy[[1]], data = D_Soy)
+anovasoy4 <- aov(D_Soy[[4]]~D_Soy[[1]], data = D_Soy)
+anovasoy5 <- aov(D_Soy[[5]]~D_Soy[[1]], data = D_Soy)
+anovasoy6 <- aov(D_Soy[[6]]~D_Soy[[1]], data = D_Soy)
+anovasoy7 <- aov(D_Soy[[7]]~D_Soy[[1]], data = D_Soy)
+anovasoy8 <- aov(D_Soy[[8]]~D_Soy[[1]], data = D_Soy)
+anovasoy9 <- aov(D_Soy[[9]]~D_Soy[[1]], data = D_Soy)
+anovasoy10 <- aov(D_Soy[[10]]~D_Soy[[1]], data = D_Soy)
+anovasoy11 <- aov(D_Soy[[11]]~D_Soy[[1]], data = D_Soy)
 ```
 
 
-After the ANOVAs are done, the normality is tested, in this case using the Shapiro test: 
+After the ANOVAs are done, the normality is tested, using the Shapiro test: 
 ```{r Shapiro ,message = FALSE, warning = FALSE, results="hide"}
 #shapiro tests Bean
 shapiro.test(anovabean3$residuals)
@@ -301,9 +319,9 @@ shapiro.test(anovasoy11$residuals)
 ```
 
 
-The homosceraticity is also a requirement in order to aprove the results of the ANOVA. It has been tested using the Breusch-Pagan test: 
+The homoscedaticity is also a requirement in order to approve the results of the ANOVA. It has been tested using the Breusch-Pagan test: 
 
-```{r Homosceraticity,message = FALSE, warning = FALSE, results="hide"}
+```{r Homoscedaticity,message = FALSE, warning = FALSE, results="hide"}
 #BEAN
 bptest(anovabean3)
 bptest(anovabean4)
@@ -339,19 +357,65 @@ bptest(anovasoy11)
 
 ```
 
-For those variables who do not fulfill the conditions to validate ANOVA, a non-parametrical test needs to be done. In this case we have used the Kruskal-Wallis test:
+As a summary, the Table 1 shows the results of ANOVA and the normality and homoscedasticity tests:
+
+```{r ANOVA RESULTS, message = FALSE, warning = FALSE}
+anovaresult.crop <- rep(c("Bean", "Maize", "Soybean"), each = 9)
+
+anovaresult.variable <- rep(c(names(D_GH[,3:11])), 3) 
+
+pvalue.bean <-c("0.0124 *", "0.0788", "0.628", "0.203", "0.061", "9.04e-10 ***", "0.623", "0.0245 *", "0.462")
+pvalue.maize <- c("9.53e-07 ***", "0.0064 **", "0.0129 *", "0.00552 **", "0.0274 *" , "0.00933 **", "0.000103 ***","0.637", "0.0209 *")
+pvalue.soy <- c("0.0311 *", "0.465", "0.216", "0.245", "0.94", "0.347", "0.232", "0.557", "0.7")
+pvalue <- c(pvalue.bean, pvalue.maize, pvalue.soy)
+
+normality.result.bean <- c("Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes")
+normality.result.maize <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
+normality.result.soy <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
+normality.result <-  c(normality.result.bean, normality.result.maize, normality.result.soy)
+
+homoscedasticity.result.bean <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "Yes", "Yes")
+homoscedasticity.result.maize <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
+homoscedasticity.result.soy <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
+homoscedasticity.result <- c(homoscedasticity.result.bean, homoscedasticity.result.maize, homoscedasticity.result.soy)
+
+anova.dataframe <-  data.frame(anovaresult.crop,anovaresult.variable,  pvalue, normality.result, homoscedasticity.result)
+
+anova.dataframe <-  anova.dataframe %>% 
+  rename(Crop = anovaresult.crop,
+         Variable = anovaresult.variable,
+         "ANOVA   *a" = pvalue,
+         "Normality   *b" = normality.result,
+         "Homoscedasticity  *c"= homoscedasticity.result)
+
+AnovaTable <- kbl(anova.dataframe, align = "c") %>%
+  collapse_rows(1, valign = "middle") %>% 
+  column_spec(2, color= ifelse(pvalue == "0.0788"| pvalue == "0.628"| pvalue == "0.203"| pvalue == "0.061"| pvalue == "0.623"| pvalue == "0.462"| pvalue =="0.637"| pvalue == "0.465"| pvalue == "0.216"| pvalue == "0.245"| pvalue == "0.94"| pvalue == "0.347"| pvalue == "0.232"| pvalue == "0.557"| pvalue == "0.7", "red", "black")) %>% 
+  kable_material(c("striped", "hover")) %>% 
+  footnote(general = "Table 1: Results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
+           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing not signifficant data. *: 95% confidance; **: 99%; ***: 99.9%
+           b: Normality tested with Shapiro-Wilk test.*
+           c: Homocedasticity tested with the Breusch-Pagan test", general_title = "")
+AnovaTable
+```
+
+### Post hoc analysis
+
+For those variables who do not fulfill the conditions to validate ANOVA, a non-parametrical test needs to be done. In this case we have used the Kruskal-Wallis test from the ```agricolae``` package, which gives directly the different groups. 
 
 ```{r Kruskal-Wallis, message = FALSE, warning = FALSE, results="hide"}
-#Kruskal-Wallis for Bean (columns 3, 4 and 7)
+#Kruskal-Wallis for Bean 
 kruskalbean3 <- kruskal(D_Bean[[3]],D_Bean[[1]], alpha = 0.05)
-kruskalbean4 <- kruskal(D_Bean[[4]],D_Bean[[1]], alpha = 0.05)
 kruskalbean7 <- kruskal(D_Bean[[7]],D_Bean[[1]], alpha = 0.05)
+kruskalbean8 <- kruskal(D_Bean[[8]],D_Bean[[1]], alpha = 0.05)
+kruskalbean9 <- kruskal(D_Bean[[9]],D_Bean[[1]], alpha = 0.05)
 
 kruskalbean3
-kruskalbean4
 kruskalbean7
+kruskalbean8
+kruskalbean9
 
-#Kruskal-Wallis for Soy (columns 7,8 and 9)
+#Kruskal-Wallis for Soy 
 kruskalsoy7 <- kruskal(D_Soy[[7]],D_Soy[[1]], alpha = 0.05)
 kruskalsoy8 <- kruskal(D_Soy[[8]],D_Soy[[1]], alpha = 0.05)
 kruskalsoy9 <- kruskal(D_Soy[[9]],D_Soy[[1]], alpha = 0.05)
@@ -360,7 +424,7 @@ kruskalsoy7
 kruskalsoy8
 kruskalsoy9
 
-#Kruskal-Wallis for Maize (columns 7,8 and 9)
+#Kruskal-Wallis for Maize
 kruskalmaize7 <- kruskal(D_Maize[[7]],D_Maize[[1]], alpha = 0.05)
 kruskalmaize8 <- kruskal(D_Maize[[8]],D_Maize[[1]], alpha = 0.05)
 kruskalmaize9 <- kruskal(D_Maize[[9]],D_Maize[[1]], alpha = 0.05)
@@ -369,23 +433,10 @@ kruskalmaize7
 kruskalmaize8
 kruskalmaize9
 
-#Kruskal-Wallis for ALL (3, 4, 5, 7 and 8)
-
-kruskalGH3 <- kruskal(D_GH[[3]],D_GH[[1]], alpha = 0.05)
-kruskalGH4 <- kruskal(D_GH[[4]],D_GH[[1]], alpha = 0.05)
-kruskalGH5 <- kruskal(D_GH[[5]],D_GH[[1]], alpha = 0.05)
-kruskalGH7 <- kruskal(D_GH[[7]],D_GH[[1]], alpha = 0.05)
-kruskalGH8 <- kruskal(D_GH[[8]],D_GH[[1]], alpha = 0.05)
-
-kruskalGH3
-kruskalGH4
-kruskalGH5
-kruskalGH7
-kruskalGH8
 
 ```
 
-When required, posthocs analysis were done. At first, Tukey test was carried out, but once observed the low sensibility of the results (most of the strains were in the same group, without noticing any difference), Duncan test was prposed as an alternative, providing more diverse grouping. 
+The variables who satisfy all the requirements for ANOVA can be tested with Tukey's or Duncan's tests in order to form groups that show the performance of the inoculation experiments in the greenhouse. Once again, Tukey test was carried out, but when  the low sensibility of the results observed (most of the strains were in the same group, without noticing any difference), Duncan's test was proposed as an alternative, providing more diverse grouping. 
 
 ```{r Tukey, message = FALSE, warning = FALSE, results="hide"}
 
@@ -476,60 +527,11 @@ Duncan.Maize11 <- duncan.test(anovamaize11,"D_Maize[[1]]")
 Duncan.Maize11$groups
 ```
 
-## Next steps
-The analyses of the Biochemical data set (IAA and P) are done, nevertheless for the Greenhouse data we still have to see if the Crop moderates the strain and viceversa, do a PCA and also a discriminant analysis. Additionally, the code has to be polished and the discussion of the results needs to be thought out.
+## Strain evaluation results
 
-## What we have so far: 
+As a summary of the results obtained in this process, tables 2, 3 and 4 display the different variables measured and the most optimal strain according to the most appropriate test. 
 
-### Green-House infection experiments
-
-From this analysis we got the next conclusions: 
-
-1) We have obtained the same results as in the article.
-2) Duncan and Tukey post-hoc analyses present the similar results with this data. However bibliography shows that Tukey is more conservative: it will make bigger groups, asuming that there aren't that many differences between groups. 
-
-
-
-
-```{r ANOVA RESULTS, message = FALSE, warning = FALSE}
-anovaresult.crop <- rep(c("Bean", "Maize", "Soybean"), each = 9)
-
-anovaresult.variable <- rep(c(names(D_GH[,3:11])), 3) 
-
-pvalue.bean <-c("0.0124 *", "0.0788", "0.628", "0.203", "0.061", "9.04e-10 ***", "0.623", "0.0245 *", "0.462")
-pvalue.maize <- c("9.53e-07 ***", "0.0064 **", "0.0129 *", "0.00552 **", "0.0274 *" , "0.00933 **", "0.000103 ***","0.637", "0.0209 *")
-pvalue.soy <- c("0.0311 *", "0.465", "0.216", "0.245", "0.94", "0.347", "0.232", "0.557", "0.7")
-pvalue <- c(pvalue.bean, pvalue.maize, pvalue.soy)
-
-normality.result.bean <- c("Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes")
-normality.result.maize <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
-normality.result.soy <- c("Yes","Yes","Yes","Yes","No","No","No","Yes","Yes")
-normality.result <-  c(normality.result.bean, normality.result.maize, normality.result.soy)
-
-homocedasticity.result.bean <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "Yes", "Yes")
-homocedasticity.result.maize <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
-homocedasticity.result.soy <- c( "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes")
-homocedasticity.result <- c(homocedasticity.result.bean, homocedasticity.result.maize, homocedasticity.result.soy)
-
-anova.dataframe <-  data.frame(anovaresult.crop,anovaresult.variable,  pvalue, normality.result, homocedasticity.result)
-
-anova.dataframe <-  anova.dataframe %>% 
-  rename(Crop = anovaresult.crop,
-         Variable = anovaresult.variable,
-         "ANOVA   *a" = pvalue,
-         "Normality   *b" = normality.result,
-         "Homocedasticity  *c"= homocedasticity.result)
-
-AnovaTable <- kbl(anova.dataframe, align = "c") %>%
-  collapse_rows(1, valign = "middle") %>% 
-  column_spec(2, color= ifelse(pvalue == "0.0788"| pvalue == "0.628"| pvalue == "0.203"| pvalue == "0.061"| pvalue == "0.623"| pvalue == "0.462"| pvalue =="0.637"| pvalue == "0.465"| pvalue == "0.216"| pvalue == "0.245"| pvalue == "0.94"| pvalue == "0.347"| pvalue == "0.232"| pvalue == "0.557"| pvalue == "0.7", "red", "black")) %>% 
-  kable_material(c("striped", "hover")) %>% 
-  footnote(general = "Table with the results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
-           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing not signifficant data. *: 95% confidance; **: 99%; ***: 99.9%
-           b: Normality tested with Shapiro-Wilk test.*
-           c: Homocedasticity tested with the Breusch-Pagan test", general_title = "")
-AnovaTable
-```
+### Bean
 
 ```{r BEAN STRAINS}
 strain.bean <-  c("Control","NA", "NA", "NA", "Control", "LSM_183/LSM_68/LSM_179","LSM_14", "NA",  "NA")
@@ -550,10 +552,40 @@ BeanTable <- kbl(data.strains.beans) %>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1, valign = "middle") %>% 
-  footnote(general = "Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable", general_title = "")
+  footnote(general = "Table 2: Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable", general_title = "")
 
 BeanTable
 ```
+
+As shown above, no clear results were obtained in the inoculation of bean plants with the different strains. In spite of this, it highlights the results obtained in the case of solubilized P in shoots and roots, where the strains LSM 183, 179 and 68 (shoot) and LSM (14) appear as the optimal choice. 
+
+```{r Bean P shoot}
+Bplot_Pshoot <- ggplot(D_Bean, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, fill=kruskalbean8$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups")+
+  xlab('Strain') +
+  ylab('Mean solubilized P in shoot (g/kg)')+
+  labs(title = "[P] in shoot in Bean",
+    caption= "Graph 1: Mean solubilized P in bean's shoot (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Bplot_Pshoot
+```
+
+```{r Bean P root}
+Bplot_Proot <- ggplot(D_Bean, aes(x=`Treatments (strains)`, y=`P Roots g/kg`, fill=kruskalbean9$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean solubilized P in shoot (g/kg)')+
+  labs(title = "[P] in root in Bean",
+         caption= "Graph 2: Mean solubilized P in bean's root (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Bplot_Proot
+```
+
+### Maize
 
 ```{r MAIZE STRAINS}
 strain.maize <-  c("LSM_65","LSM_65","Control","Control/LSM_65", "LSM_24", "LSM_24", "Control/LSM_65/LSM_14/LSM_24/LSM_62", "NA","LSM_65/LSM_24")
@@ -574,10 +606,93 @@ MaizeTable <- kbl(data.strains.maize) %>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
-  footnote(general = "Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
+  footnote(general = "Table 3: Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
 
 MaizeTable
 ```
+
+In this case, it is visible that the parameters are mainly affected by 2 strains. Strain LSM 65 has a positive effect in the growth-related variables, whereas strain LSM 24 is the best performer for the biochemical traits like P solubilization. 
+
+```{r Maize Plant Height}
+Mplot_Height <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`Plant high (Mean - cm)`, fill=Duncan.Maize3$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean plant height (cm)')+
+  labs(title = "Plant height in Maize",
+    caption= "Graph 3: Mean plant height (cm) in maize. Groups made by Duncan's test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+  
+Mplot_Height
+```
+
+```{r Maize shoot dry mass}
+Mplot_Shootmass <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y= `Shoot dry mass (g)`,fill=Duncan.Maize4$groups[`Treatments (strains)`, "groups"] )) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean shoot dry mass (g)')+
+  labs(title = "Shoot dry mass in Maize",
+    caption= "Graph 4: Mean shoot dry mass (g) in maize. Groups made by Duncan's test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Mplot_Shootmass
+```
+
+```{r Total dry mass maize}
+Mplot_Totalmass <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`Total dry mass (g)`,fill=Duncan.Maize6$groups[`Treatments (strains)`, "groups"] )) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean total dry mass (g)')+
+  labs(title = "Total dry mass in Maize",
+    caption= "Graph 5: Mean total dry mass (g) in maize. Groups made by Duncan's test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Mplot_Totalmass 
+```
+
+```{r P soil Maize}
+Mplot_Psoil <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`P Soil (mg/dm3)`, fill=kruskalmaize7$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean P solubilized in soil (mg/dm3)')+
+  labs(title = "[P] in soil in Maize",
+    caption= "Graph 6: Solubilized P in soil in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Mplot_Psoil  
+```
+
+```{r P shoot Maize}
+Mplot_Pshoot <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, fill=kruskalmaize8$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean P solubilized in shoot (mg/dm3)')+
+  labs(title = "[P] in shoot in Maize",
+    caption= "Graph 7: Solubilized P in shoot in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Mplot_Pshoot
+```
+
+```{r N root maize}
+Mplot_Nroot <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y= `N Roots g/kg`, fill=Duncan.Maize11$groups[`Treatments (strains)`, "groups"] )) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean N in roots (g/kg)')+
+  labs(title = "N in root in Maize",
+    caption= "Graph 8: N concentration in root in maize (mg/dm3). Groups made by Duncan's test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Mplot_Nroot
+```
+
+### Soybean
 
 ```{r SOYBEAN STRAINS}
 strain.soy <- c("LSM_179", "NA", "NA",  "NA", "All", "LSM_14/LSM_24/LSM_62", "LSM_183/LSM_179", "NA","NA")
@@ -597,28 +712,56 @@ SoybeanTable <- kbl(data.strains.soy) %>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
-  footnote(general = "Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
+  footnote(general = "Table 4: Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
 
 SoybeanTable
 ```
 
-5) Summary of the results: 
+Last, the experiments in soybean show how this plant is affected by LSM 179, 183, 14, 24 and 62, but only in 3 parameters. In the rest of them, no significant difference has been found. 
 
-**Bean** it's mostly affected by strain LSM 183 and 24 in the Shoot dry mass, LSM 183 in the total dry mass, LSM 183, 68 and 179 in the content of P in the shoot.
+```{r Plant Height Soy}
+Splot_Height <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`Plant high (Mean - cm)`, fill=Duncan.Soy3$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean plant height (cm)')+
+  labs(title = "Plant height in Soybean",
+    caption= "Graph 9: Mean plant height (cm) in soybean. Groups made by Duncan's test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Splot_Height
+```
 
-**Soybean** is mainly affected by strain LSM 179 in the Plant Height, LSM 14, 24 and 62 in the P shoot and  LSM 183 and 179 in the P root.
+```{r P shoot Soy}
+Splot_Pshoot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, fill=kruskalsoy8$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean P solubilized in shoot (g/kg)')+
+  labs(title = "[P] in shoot in Maize",
+    caption= "Graph 10: Mean P solubilized in soybean's shoot. Groups made by Kruskal-Wallis' test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Splot_Pshoot 
+```
 
-<<<<<<< HEAD
-**Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root. 
+
+```{r P root Soy}
+Splot_Proot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Roots g/kg`, fill=kruskalsoy9$groups[`Treatments (strains)`, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Mean P solubilized in shoot (g/kg)')+
+  labs(title = "[P] in root in Soybean",
+    caption= "Graph 11: Mean solubilized P in soybean's roots. Groups made by Kruskal-Wallis' test.")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+Splot_Proot  
+```
+
 
 ##PCA
 ```{r}
-#install.packages('FactoMineR')
-#install.packages('factoextra')
-
-library(factoextra)
-library(ggplot2)
-
 #Adding column for individual identification of points based on the treatment
 D_GH$Name <- paste(D_GH$`Treatments (strains)`,"_",D_GH$`Repetition (pots)`)
       #eliminate this name column
