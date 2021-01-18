@@ -16,7 +16,7 @@ knitr::opts_chunk$set
 ```
 
 ## Introduction
-
+ 
 In typically intensive crops like bean, maize or soybean are able to reach high yields thanks to the abusive use of pesticides and fertilizers. In an attempt to manage agriculture in a more sustainable way, Noemi Carla Baron , Andressa de Souza Pollo and  Everlon Cid Rigobelo in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](https://peerj.com/articles/9005/) test the performance of *Purpureocillium lilacinum, Purpureocillium lavendulum* and *Metarhizium marquandii* as potential bioinoculants that might replace the current products. 
 
 In order to do so, Baron et al. isolated the strains used from soil samples. All the different strains where screend for their ability to solubilize phosphorus (P) and produce indolacetic acid (IAA). Those who were more promising were tested in greenhouse inoculation experiments, where Growth promotion parameters including plant height, dry mass and contents of P and nitrogen (N) in the plants and in the rhizospheric soil were assessed. As statistical analysis software AGROESTAT was used. 
