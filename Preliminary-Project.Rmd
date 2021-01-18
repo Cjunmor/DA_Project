@@ -172,10 +172,20 @@ lmtest::bptest(ANOVA_IAA)
 As they were not normal or homeoscedastic, Kruskal-Wallis and Holm analyses were carried out, obtaining the following groups:
 ````{r IAA K-W, out.width= "170%"}
 kr <- agricolae::kruskal(D_IAA[2], D_IAA[1], alpha = 0.05, p.adj ="holm", group=TRUE)
-kr$groups
-plot (kr)
-
-
+# kr$groups
+# plot (kr)
+D_IAA$names <- paste0("LSM ", D_IAA$LSM_strain ) #Add column with strain name
+kr_p <- ggplot(D_IAA, aes(x=names, y=IAA_pg, fill=kr$groups[LSM_strain, "groups"])) +
+  geom_boxplot()+
+  labs(fill = "Strain groups") +
+  xlab('Strain') +
+  ylab('Indolacetic acid produced (microg/g)')+
+  labs(title = "Indolacetic acid produced by each strain (Non Parametric Analysis)",
+       caption= "Graph 1: Indolacetic acid concentrations Holms groups (microgram per gram of dried micelium)")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0), 
+        axis.text.x = element_text(angle = 90))
+kr_p
 
 ```
 
@@ -223,7 +233,7 @@ Dn_p <- ggplot(n_D_IAA, aes(x=names, y=n_IAA, fill=D_nIAA$groups[D_IAA.LSM_strai
   xlab('Strain') +
   ylab('Indolacetic acid produced (microg/g)')+
   labs(title = "Indolacetic acid produced by each strain (Parametric Analysis)",
-       caption= "Graph 2: Indolacetic acid concentrations Duncan groups (microgram per gram of dried micelium)")+
+       caption= "Graph 3: Indolacetic acid concentrations Duncan groups (microgram per gram of dried micelium)")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0), 
         axis.text.x = element_text(angle = 90))
@@ -275,6 +285,7 @@ plot(T_P)
 #         plot.caption = element_text(hjust = 0),
 #         axis.text.x = element_text(angle = 90))
 # TP_p
+
 
 cp1 <- colorRampPalette(c ("maroon1", "orange")) #Color palette
 dev.new (width=17, height= 5)
