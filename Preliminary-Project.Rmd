@@ -15,7 +15,7 @@ knitr::opts_chunk$set
 
 ## Introduction
 
-In typically intensive crops like bean, maize or soybean are able to reach high yields thanks to the abusive use of pesticides and fertilizers. In an attempt to manage agriculture in a more sustainable way, Noemi Carla Baron<sup>1</sup> , Andressa de Souza Pollo<sup>2</sup> and  Everlon Cid Rigobelo<sup>1</sup> in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](https://peerj.com/articles/9005/) test the performance of *Purpureocillium lilacinum, Purpureocillium lavendulum* and *Metarhizium marquandii* as potential bioinoculants that might replace the current products. 
+In typically intensive crops like bean, maize or soybean are able to reach high yields thanks to the abusive use of pesticides and fertilizers. In an attempt to manage agriculture in a more sustainable way, Noemi Carla Baron , Andressa de Souza Pollo and  Everlon Cid Rigobelo in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](https://peerj.com/articles/9005/) test the performance of *Purpureocillium lilacinum, Purpureocillium lavendulum* and *Metarhizium marquandii* as potential bioinoculants that might replace the current products. 
 
 In order to do so, Baron et al. isolated the strains used from soil samples. All the different strains where screend for their ability to solubilize phosphorus (P) and produce indolacetic acid (IAA). Those who were more promising were tested in greenhouse inoculation experiments, where Growth promotion parameters including plant height, dry mass and contents of P and nitrogen (N) in the plants and in the rhizospheric soil were assessed. As statistical analysis software AGROESTAT was used. 
 
@@ -392,9 +392,9 @@ AnovaTable <- kbl(anova.dataframe, align = "c") %>%
   collapse_rows(1, valign = "middle") %>% 
   column_spec(2, color= ifelse(pvalue == "0.0788"| pvalue == "0.628"| pvalue == "0.203"| pvalue == "0.061"| pvalue == "0.623"| pvalue == "0.462"| pvalue =="0.637"| pvalue == "0.465"| pvalue == "0.216"| pvalue == "0.245"| pvalue == "0.94"| pvalue == "0.347"| pvalue == "0.232"| pvalue == "0.557"| pvalue == "0.7", "red", "black")) %>% 
   kable_material(c("striped", "hover")) %>% 
-  footnote(general = "Table 1: Results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
-           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing not signifficant data. *: 95% confidance; **: 99%; ***: 99.9%
-           b: Normality tested with Shapiro-Wilk test.*
+  footnote(general = "*Table 1*: Results of ANOVA analysis for the different dependent variables in each crop, and the tests for normality and homoscedaticity required. Degrees of freedom = 7. 
+           a: ANOVA's P-value. Red color indicates P-values over 0.05, adressing not signifficant data. \\*: 95% confidance; \\*\\*: 99%; \\*\\*\\*: 99.9%
+           b: Normality tested with Shapiro-Wilk test.
            c: Homocedasticity tested with the Breusch-Pagan test", general_title = "")
 AnovaTable
 ```
@@ -552,7 +552,7 @@ BeanTable <- kbl(data.strains.beans) %>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1, valign = "middle") %>% 
-  footnote(general = "Table 2: Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable", general_title = "")
+  footnote(general = "*Table 2*: Optimal strains for each variable measured in bean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable", general_title = "")
 
 BeanTable
 ```
@@ -566,7 +566,7 @@ Bplot_Pshoot <- ggplot(D_Bean, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, f
   xlab('Strain') +
   ylab('Mean solubilized P in shoot (g/kg)')+
   labs(title = "[P] in shoot in Bean",
-    caption= "Graph 1: Mean solubilized P in bean's shoot (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
+    caption= "*Graph 1*: Mean solubilized P in bean's shoot (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Bplot_Pshoot
@@ -579,7 +579,7 @@ Bplot_Proot <- ggplot(D_Bean, aes(x=`Treatments (strains)`, y=`P Roots g/kg`, fi
   xlab('Strain') +
   ylab('Mean solubilized P in shoot (g/kg)')+
   labs(title = "[P] in root in Bean",
-         caption= "Graph 2: Mean solubilized P in bean's root (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
+         caption= "*Graph 2*: Mean solubilized P in bean's root (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Bplot_Proot
@@ -606,7 +606,7 @@ MaizeTable <- kbl(data.strains.maize) %>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
-  footnote(general = "Table 3: Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
+  footnote(general = "*Table 3*: Optimal strains for each variable measured in maize greenhouse experiments adressed by Kruskal-Wallis or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
 
 MaizeTable
 ```
@@ -620,7 +620,7 @@ Mplot_Height <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`Plant high (Mea
   xlab('Strain') +
   ylab('Mean plant height (cm)')+
   labs(title = "Plant height in Maize",
-    caption= "Graph 3: Mean plant height (cm) in maize. Groups made by Duncan's test.")+
+    caption= "*Graph 3*: Mean plant height (cm) in maize. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
   
@@ -634,7 +634,7 @@ Mplot_Shootmass <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y= `Shoot dry m
   xlab('Strain') +
   ylab('Mean shoot dry mass (g)')+
   labs(title = "Shoot dry mass in Maize",
-    caption= "Graph 4: Mean shoot dry mass (g) in maize. Groups made by Duncan's test.")+
+    caption= "*Graph 4*: Mean shoot dry mass (g) in maize. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Shootmass
@@ -647,7 +647,7 @@ Mplot_Totalmass <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`Total dry ma
   xlab('Strain') +
   ylab('Mean total dry mass (g)')+
   labs(title = "Total dry mass in Maize",
-    caption= "Graph 5: Mean total dry mass (g) in maize. Groups made by Duncan's test.")+
+    caption= "*Graph 5*: Mean total dry mass (g) in maize. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Totalmass 
@@ -660,7 +660,7 @@ Mplot_Psoil <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`P Soil (mg/dm3)`
   xlab('Strain') +
   ylab('Mean P solubilized in soil (mg/dm3)')+
   labs(title = "[P] in soil in Maize",
-    caption= "Graph 6: Solubilized P in soil in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
+    caption= "*Graph 6*: Solubilized P in soil in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Psoil  
@@ -673,7 +673,7 @@ Mplot_Pshoot <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, 
   xlab('Strain') +
   ylab('Mean P solubilized in shoot (mg/dm3)')+
   labs(title = "[P] in shoot in Maize",
-    caption= "Graph 7: Solubilized P in shoot in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
+    caption= "*Graph 7*: Solubilized P in shoot in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Pshoot
@@ -686,7 +686,7 @@ Mplot_Nroot <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y= `N Roots g/kg`, 
   xlab('Strain') +
   ylab('Mean N in roots (g/kg)')+
   labs(title = "N in root in Maize",
-    caption= "Graph 8: N concentration in root in maize (mg/dm3). Groups made by Duncan's test.")+
+    caption= "*Graph 8*: N concentration in root in maize (mg/dm3). Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Nroot
@@ -712,7 +712,7 @@ SoybeanTable <- kbl(data.strains.soy) %>%
   column_spec(1, bold = T) %>%
   column_spec(c(1:4), border_left = FALSE, border_right = FALSE) %>% 
   collapse_rows(columns = 1:2, valign = "middle") %>% 
-  footnote(general = "Table 4: Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
+  footnote(general = "*Table 4*: Optimal strains for each variable measured in soybean greenhouse experiments adressed by Kruskal-Wallis, or Duncan analysis when significant differences are found. NA: Not applicable.", general_title = "")
 
 SoybeanTable
 ```
@@ -726,7 +726,7 @@ Splot_Height <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`Plant high (Mean 
   xlab('Strain') +
   ylab('Mean plant height (cm)')+
   labs(title = "Plant height in Soybean",
-    caption= "Graph 9: Mean plant height (cm) in soybean. Groups made by Duncan's test.")+
+    caption= "*Graph 9*: Mean plant height (cm) in soybean. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Splot_Height
@@ -739,7 +739,7 @@ Splot_Pshoot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, fi
   xlab('Strain') +
   ylab('Mean P solubilized in shoot (g/kg)')+
   labs(title = "[P] in shoot in Maize",
-    caption= "Graph 10: Mean P solubilized in soybean's shoot. Groups made by Kruskal-Wallis' test.")+
+    caption= "*Graph 10*: Mean P solubilized in soybean's shoot. Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Splot_Pshoot 
@@ -753,7 +753,7 @@ Splot_Proot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Roots g/kg`, fil
   xlab('Strain') +
   ylab('Mean P solubilized in shoot (g/kg)')+
   labs(title = "[P] in root in Soybean",
-    caption= "Graph 11: Mean solubilized P in soybean's roots. Groups made by Kruskal-Wallis' test.")+
+    caption= "*Graph 11*: Mean solubilized P in soybean's roots. Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Splot_Proot  
