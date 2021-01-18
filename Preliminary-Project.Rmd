@@ -56,7 +56,7 @@ library(factoextra)
   
 2. Evaluate the performance of the strains selected by the authors by doing statistical analysis using the data provided. 
 
-3. Carry out a Principal Components Analysis (PCA) and a Linear Discriminant Analisys (LDA) in order to adress ___________ AYUDA __________
+3. Carry out a Principal Components Analysis (PCA) and a Linear Discriminant Analysis (LDA) in order to address the possible differences in a driven analysis where the groups are determined previously. 
 
 
 
@@ -156,7 +156,7 @@ D_IAA$LSM_strain <- as.factor(D_IAA$LSM_strain)
 ANOVA_IAA<- aov (D_IAA$IAA_pg ~ D_IAA$LSM_strain, data= D_IAA)
 print(summary(ANOVA_IAA))
 ```
- Lillie test Was chosen to do the in order to test the normality because...
+ Lillie test Was chosen to do the in order to test the normality because it allows the processing of more than 50 dependent variables at once. 
 ```{r IAA Lillie test, message = FALSE, warning = FALSE, results= "show"}
 nortest::lillie.test(ANOVA_IAA$residuals)
 ```
@@ -566,7 +566,7 @@ Bplot_Pshoot <- ggplot(D_Bean, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, f
   xlab('Strain') +
   ylab('Mean solubilized P in shoot (g/kg)')+
   labs(title = "[P] in shoot in Bean",
-    caption= "*Graph 1*: Mean solubilized P in bean's shoot (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
+    caption= "Graph 1: Mean solubilized P in bean's shoot (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Bplot_Pshoot
@@ -579,7 +579,7 @@ Bplot_Proot <- ggplot(D_Bean, aes(x=`Treatments (strains)`, y=`P Roots g/kg`, fi
   xlab('Strain') +
   ylab('Mean solubilized P in shoot (g/kg)')+
   labs(title = "[P] in root in Bean",
-         caption= "*Graph 2*: Mean solubilized P in bean's root (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
+         caption= "Graph 2: Mean solubilized P in bean's root (g/kg) in different strains. Groups made by Kruskall-Wallis' test. ")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Bplot_Proot
@@ -620,7 +620,7 @@ Mplot_Height <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`Plant high (Mea
   xlab('Strain') +
   ylab('Mean plant height (cm)')+
   labs(title = "Plant height in Maize",
-    caption= "*Graph 3*: Mean plant height (cm) in maize. Groups made by Duncan's test.")+
+    caption= "Graph 3: Mean plant height (cm) in maize. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
   
@@ -634,7 +634,7 @@ Mplot_Shootmass <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y= `Shoot dry m
   xlab('Strain') +
   ylab('Mean shoot dry mass (g)')+
   labs(title = "Shoot dry mass in Maize",
-    caption= "*Graph 4*: Mean shoot dry mass (g) in maize. Groups made by Duncan's test.")+
+    caption= "Graph 4: Mean shoot dry mass (g) in maize. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Shootmass
@@ -647,7 +647,7 @@ Mplot_Totalmass <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`Total dry ma
   xlab('Strain') +
   ylab('Mean total dry mass (g)')+
   labs(title = "Total dry mass in Maize",
-    caption= "*Graph 5*: Mean total dry mass (g) in maize. Groups made by Duncan's test.")+
+    caption= "Graph 5: Mean total dry mass (g) in maize. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Totalmass 
@@ -660,7 +660,7 @@ Mplot_Psoil <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`P Soil (mg/dm3)`
   xlab('Strain') +
   ylab('Mean P solubilized in soil (mg/dm3)')+
   labs(title = "[P] in soil in Maize",
-    caption= "*Graph 6*: Solubilized P in soil in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
+    caption= "Graph 6: Solubilized P in soil in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Psoil  
@@ -673,7 +673,7 @@ Mplot_Pshoot <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, 
   xlab('Strain') +
   ylab('Mean P solubilized in shoot (mg/dm3)')+
   labs(title = "[P] in shoot in Maize",
-    caption= "*Graph 7*: Solubilized P in shoot in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
+    caption= "Graph 7: Solubilized P in shoot in maize (mg/dm3). Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Pshoot
@@ -686,7 +686,7 @@ Mplot_Nroot <- ggplot(D_Maize, aes(x=`Treatments (strains)`, y= `N Roots g/kg`, 
   xlab('Strain') +
   ylab('Mean N in roots (g/kg)')+
   labs(title = "N in root in Maize",
-    caption= "*Graph 8*: N concentration in root in maize (mg/dm3). Groups made by Duncan's test.")+
+    caption= "Graph 8: N concentration in root in maize (mg/dm3). Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Mplot_Nroot
@@ -726,7 +726,7 @@ Splot_Height <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`Plant high (Mean 
   xlab('Strain') +
   ylab('Mean plant height (cm)')+
   labs(title = "Plant height in Soybean",
-    caption= "*Graph 9*: Mean plant height (cm) in soybean. Groups made by Duncan's test.")+
+    caption= "Graph 9: Mean plant height (cm) in soybean. Groups made by Duncan's test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Splot_Height
@@ -739,7 +739,7 @@ Splot_Pshoot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, fi
   xlab('Strain') +
   ylab('Mean P solubilized in shoot (g/kg)')+
   labs(title = "[P] in shoot in Maize",
-    caption= "*Graph 10*: Mean P solubilized in soybean's shoot. Groups made by Kruskal-Wallis' test.")+
+    caption= "Graph 10: Mean P solubilized in soybean's shoot. Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Splot_Pshoot 
@@ -753,15 +753,18 @@ Splot_Proot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Roots g/kg`, fil
   xlab('Strain') +
   ylab('Mean P solubilized in shoot (g/kg)')+
   labs(title = "[P] in root in Soybean",
-    caption= "*Graph 11*: Mean solubilized P in soybean's roots. Groups made by Kruskal-Wallis' test.")+
+    caption= "Graph 11: Mean solubilized P in soybean's roots. Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
 Splot_Proot  
 ```
 
 
-##PCA
-```{r}
+## PCA
+Principal Components Analysis was done in order to test if in a driven analysis, where the different groups are defined by the researcher previously according to a specific criterion, in this case the different crops and strains, differences in the performance can be observed. 
+
+For this project, the package ```factoextra``` is used to carry out the PCA.
+```{r General PCA, message = FALSE, warning = FALSE, include=FALSE}
 #Adding column for individual identification of points based on the treatment
 D_GH$Name <- paste(D_GH$`Treatments (strains)`,"_",D_GH$`Repetition (pots)`)
       #eliminate this name column
@@ -781,36 +784,46 @@ factoextra::fviz_pca_ind(C_pca,
 )
 ```
 
-PCA with colored crops
-```{r}
+### Crops PCA
+PCA differentiated by crops:
+```{r PCA crops}
 #PCA with colored crops
 groups_c <- as.factor(D_GH$Cropname)
-factoextra::fviz_pca_ind(C_pca,
+PCAcrops <- factoextra::fviz_pca_ind(C_pca,
              col.ind = groups_c, # color by groups
              palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
              addEllipses = TRUE, # Concentration ellipses
              ellipse.type = "confidence",
              legend.title = "Crops",
-             repel = TRUE
-)
+             repel = TRUE)+
+  labs(caption= "Graph 12: PCA on the individuals, with the crops shown in different colors.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAcrops
+
 ```
-The x axis separes very nicely the crops from each other
+
+The x axis (Dim1) separates very nicely the crops from each other, clearly differentiating the three crops from each other, based on the differences among their individuals.
 
 
-Biplot about crops
-```{r}
-factoextra::fviz_pca_biplot(C_pca,
+
+```{r Variables PCA}
+PCAvariables <- factoextra::fviz_pca_biplot(C_pca,
                            col.ind = groups_c,#color by groups
                            palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
                            addEllipses = TRUE, # Concentration ellipses
                            ellipse.type = "confidence",
                            legend.title = "Crops",
-                           repel = TRUE
-)
+                           repel = TRUE)+
+  labs(title= "Variables affecting the differentiation of the crops - PCA",
+    caption= "Graph 13: PCA disriminating different variables as vectors that differentiate the crops.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAvariables
+
 #Opposite direction arrows indicate negative correlations between the variables
 ```
 PCA for each crop (dif colors), discriminating treatments with names
-```{r}
+
+```{r, message = FALSE, warning = FALSE, include=FALSE}
 D1 <- D_GH [, 3:11]
 
 rownames(D1) <- paste0(D_GH$Cropname, D_GH$Name)
@@ -835,23 +848,26 @@ for (i in 1:length(a$PC1)) {
   
 ```
 
-PCA with different colored treatments (shows that we need to subset each crop)
+PCA labbed according to the strains, to reveal if there is some grouping by the strains.
 ```{r}
 groups_t <- as.factor(D_GH$`Treatments (strains)`)
-factoextra::fviz_pca_ind(C_pca,geom ="point",
+PCAstrains <- factoextra::fviz_pca_ind(C_pca,geom ="point",
                          col.ind = groups_t, # color by groups
                          #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
                          #addEllipses = TRUE, # Concentration ellipses
                          #ellipse.type = "confidence",
                          legend.title = "Strains",
-                         repel = FALSE
-)
+                         repel = FALSE)+
+  labs(title= "Strains distribution in the different groups - PCA",
+    caption= "Graph 14: PCA showing how different strains are distributed among the groups.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAstrains
 ```
-The PCA doesn't divide the points by strains
 
-Subset each species with each name
-Bean
-```{r}
+Since a differentiation of the strain is not clear considering all the crops at once, a PCA for every crop will be made.
+
+### Bean PCA
+```{r PCA variable Beans, message = FALSE, warning = FALSE, include=FALSE}
 D_GHb<- D_GH[,c(3:13)]
 D_GHb <- D_GHb[D_GHb$Cropname == "Bean",]
 Name <- D_GHb$Name
@@ -865,44 +881,22 @@ factoextra::fviz_pca_ind(B_pca,
                          addEllipses = TRUE, # Concentration ellipses
                          ellipse.type = "confidence",
                          #legend.title = "Treatments",
-                         repel = FALSE
-)
-
-factoextra::fviz_pca_var(B_pca,
-                         col.var = "contrib", # Color by contributions to the PC
-                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                         repel = TRUE
-)
+                         repel = FALSE)
 ```
 
-Soybean
 ```{r}
-D_GHs<- D_GH[,c(3:13)]
-D_GHs<- D_GHs[D_GHs$Cropname == "Soybean",]
-Name <- D_GHs$Name
-D_GHs <- D_GHs [1:9]
-rownames(D_GHs)<-Name
-S_pca <- prcomp(D_GHs, scale = TRUE)
-factoextra::fviz_pca_ind(S_pca,
-                         geom = c("point", "text"),
-                         #col.ind = groups_t,
-                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-                         #addEllipses = TRUE, # Concentration ellipses
-                         #ellipse.type = "confidence",
-                         #legend.title = "Treatments",
-                         repel = FALSE
-)
-
-factoextra::fviz_pca_var(S_pca,
+PCAbean <- factoextra::fviz_pca_var(B_pca,
                          col.var = "contrib", # Color by contributions to the PC
                          gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                         repel = TRUE
-)
-
+                         repel = TRUE)+
+  labs(title= "Variables affecting Bean - PCA",
+    caption= "Graph 15: PCA disriminating different variables as vectors within the bean variables. Colours show the contribution of each variable.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAbean
 ```
 
-Maize
-```{r}
+### Maize PCA
+```{r, message = FALSE, warning = FALSE, include=FALSE}
 D_GHm<- D_GH[,c(3:13)]
 D_GHm <- D_GHm[D_GHm$Cropname == "Maize",]
 Name <- D_GHm$Name
@@ -916,18 +910,53 @@ factoextra::fviz_pca_ind(M_pca,
                          #addEllipses = TRUE, # Concentration ellipses
                          #ellipse.type = "confidence",
                          #legend.title = "Treatments",
-                         repel = FALSE
-)
+                         repel = FALSE)
+```
 
-factoextra::fviz_pca_var(M_pca,
+```{r}
+
+PCAmaize <- factoextra::fviz_pca_var(M_pca,
                          col.var = "contrib", # Color by contributions to the PC
                          gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                         repel = TRUE
-)
+                         repel = TRUE)+
+  labs(title= "Variables affecting Maize - PCA",
+    caption= "Graph 16: PCA disriminating different variables as vectors within the maize variables. Colours show the contribution of each variable.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAmaize
 ```
-Strains are not separated even if do a PCA for each crop.
 
-Height and dry mass seem to be the parameters that separate the strains the most in all crops
+### Soybean PCA
+```{r, message = FALSE, warning = FALSE, include=FALSE}
+D_GHs<- D_GH[,c(3:13)]
+D_GHs<- D_GHs[D_GHs$Cropname == "Soybean",]
+Name <- D_GHs$Name
+D_GHs <- D_GHs [1:9]
+rownames(D_GHs)<-Name
+S_pca <- prcomp(D_GHs, scale = TRUE)
+factoextra::fviz_pca_ind(S_pca,
+                         geom = c("point", "text"),
+                         #col.ind = groups_t,
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         #addEllipses = TRUE, # Concentration ellipses
+                         #ellipse.type = "confidence",
+                         #legend.title = "Treatments",
+                         repel = FALSE)
+```
+
+```{r}
+PCAsoy <- factoextra::fviz_pca_var(S_pca,
+                         col.var = "contrib", # Color by contributions to the PC
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE)+
+  labs(title= "Variables affecting Soybean - PCA",
+    caption= "Graph 17: PCA disriminating different variables as vectors within the soybean variables. Colours show the contribution of each variable.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAsoy
+```
+
+### PCA results:
+
+Strains are not separated even a PCA for each crop is done. However, height and dry mass seem to be the parameters that separate the strains the most in all crops.
 
 ##Moderator analysis
 
