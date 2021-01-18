@@ -6,6 +6,8 @@ date: "18/01/2021"
 output:
   html_document:
     code_folding: hide
+    toc: true
+    toc_depth: 3
 
 ---
 
@@ -956,11 +958,11 @@ PCAsoy
 
 ### PCA results:
 
-Strains are not separated even a PCA for each crop is done. However, height and dry mass seem to be the parameters that separate the strains the most in all crops.
+Strains are not separated even when a PCA for each crop is done. However, height and dry mass seem to be the parameters that separate the strains the most in all crops.
 
-##Moderator analysis
+## Moderator analysis
 
-##Discriminant analysis
-=======
+## Discriminant analysis
+
 **Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root
 >>>>>>> 91c55e4d66c4c5923c372adb8ea37a7d2db4af95
