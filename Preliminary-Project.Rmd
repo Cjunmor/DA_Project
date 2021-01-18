@@ -1,5 +1,5 @@
 ---
-title: "Growth-Promoting Fungi Evaluation"
+title: "Growth-Promoting Fungi Statistical Re-evaluation"
 author: "Carolina Juncá, Riyad Hilal and Ignacio Romero"
 
 date: "18/01/2021"
@@ -19,7 +19,7 @@ knitr::opts_chunk$set
  
 In typically intensive crops like bean, maize or soybean are able to reach high yields thanks to the abusive use of pesticides and fertilizers. In an attempt to manage agriculture in a more sustainable way, Noemi Carla Baron , Andressa de Souza Pollo and  Everlon Cid Rigobelo in their article [" Purpureocillium lilacinum and Metarhizium marquandii as plant growth-promoting fungi."](https://peerj.com/articles/9005/) test the performance of *Purpureocillium lilacinum, Purpureocillium lavendulum* and *Metarhizium marquandii* as potential bioinoculants that might replace the current products. 
 
-In order to do so, Baron et al. isolated the strains used from soil samples. All the different strains where screend for their ability to solubilize phosphorus (P) and produce indolacetic acid (IAA). Those who were more promising were tested in greenhouse inoculation experiments, where Growth promotion parameters including plant height, dry mass and contents of P and nitrogen (N) in the plants and in the rhizospheric soil were assessed. As statistical analysis software AGROESTAT was used. 
+In order to do so, Baron et al. isolated the strains used from soil samples. All the different strains where screened for their ability to solubilize phosphorus (P) and produce indolacetic acid (IAA). Those who were more promising were tested in greenhouse inoculation experiments, where Growth promotion parameters including plant height, dry mass and contents of P and nitrogen (N) in the plants and in the rhizospheric soil were assessed. As statistical analysis software AGROESTAT was used. 
 
 In this project, the results obtained by the authors is reanalyzed and reformulated using RStudio and  different packages that allow to carry out any analysis and display the output in a more convenient way. 
 
@@ -50,15 +50,17 @@ library(kableExtra)
 library(tidyverse)
 #install.packages('factoextra')
 library(factoextra)
+#install.packages('MASS')
+library("MASS")
 ```
 
 ## Objectives
 
 1. Select which of the strains provided are the most promising to test in greenhouse experiment according to their P solubilization and IAA production.
   
-2. Evaluate the performance of the strains selected by the authors by doing statistical analysis using the data provided. 
+2.  Carry out a Principal Component Analysis (PCA) and a Linear Discriminant Analysis (LDA) to characterize the data obtained from the greenhouse experiment. 
 
-3. Carry out a Principal Components Analysis (PCA) and a Linear Discriminant Analysis (LDA) in order to address the possible differences in a driven analysis where the groups are determined previously. 
+3.Evaluate the performance of the strains selected by the authors by doing statistical analysis using the data provided. 
 
 
 
@@ -82,7 +84,7 @@ xl_2 <- "https://dfzljdn9uc3pi.cloudfront.net/2020/9005/1/Raw_Data_Greenhouse_te
 download.file(xl_2, "Data/Data_GH.xlsx", mode = "wb")
 ```
 
-Different organized data frames where created from the raw data. This data frames contain the different strains tested , the repetitions and the biochemical or growth parameters. 
+Different organized data frames where created from the raw data. These data frames contain the different strains tested , the repetitions and the biochemical or growth parameters. 
 
 ```{r Data organisation }
 
@@ -223,7 +225,9 @@ nortest::lillie.test(ANOVA_P$residuals)
 
 As the residuals were normal and the differences between strains were significant, a Duncan test was conducted:
 ````{r P Tukey, out.width= "170%"}
-
+T_P <- HSD.test(ANOVA_P,'D_Phosphorus$LSM_strain', group = TRUE, alpha = 0.05)
+T_P$groups
+plot(T_P)
 D_P <- duncan.test(ANOVA_P,'D_Phosphorus$LSM_strain')
 D_P$groups
 plot(D_P)
@@ -235,14 +239,223 @@ Additionally, the variance of strain 24 is very big, more repetitions would be n
 
 ## Strain selection results
 
-As seen above, due to the big amounts of strains that have to be analyzed and compare, is much more useful the Duncan's test than the Tukey's. However, the judgment of the authors remains unclear, since the choose 5 strains according to the IAA production and only 3 from solubilized P, despite the uncertainty of this last. 
+As seen above, due to the big amounts of strains that have to be analyzed and compared, is much more useful the Duncan's test than the Tukey's. However, the judgment of the authors remains unclear, since the choose 5 strains according to the IAA production and only 3 from solubilized P, despite the uncertainty of this last. 
 
 In the end, the strains chosen to be analyzed are the following: **LSM 65, 62, 68, 179, 183, 24 and 14.**
 
 
-## Strain evaluation method
+## PCA
+Principal Components Analysis was done in order to see if the data groups according to some of the independent variables (crops or strains).
 
-A similar process has been followed to identify the most optimal strains in the greenhose experiments. First an ANOVA has been done, taking into account all the different requirements. Then, for those cases in which ANOVA is not possible, the Kruskal-Wallis' test has been done. For the rest of the cases, post hoc analisis was carried out to assess the different grouping options. 
+For this project, the package ```factoextra``` is used to carry out the PCA.
+```{r General PCA, message = FALSE, warning = FALSE, include=FALSE}
+#Adding column for individual identification of points based on the treatment
+D_GH$Name <- paste(D_GH$`Treatments (strains)`,"_",D_GH$`Repetition (pots)`)
+      #eliminate this name column
+
+#Data for PCA 
+#D_PCA <- D_GH [-2]
+#D_PCA <- D_GH [3:11]
+#data (D_GH)
+
+#General PCA
+C_pca <- prcomp(D_GH [3:11], scale = TRUE)
+factoextra::fviz_eig(C_pca)
+factoextra::fviz_pca_ind(C_pca,
+             col.ind = "cos2", # Color by the quality of representation
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+             repel = TRUE     # Avoid text overlapping
+)
+```
+
+### Crops PCA
+
+PCA differentiated by crops:
+```{r PCA crops, message = FALSE, warning = FALSE, include=FALSE}
+#PCA with colored crops
+groups_c <- as.factor(D_GH$Cropname)
+PCAcrops <- factoextra::fviz_pca_ind(C_pca,
+             col.ind = groups_c, # color by groups
+             palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+             addEllipses = FALSE, # Concentration ellipses
+             legend.title = "Crops",
+             repel = TRUE)
+PCAcrops
+
+```
+
+```{r Variables PCA}
+PCAvariables <- factoextra::fviz_pca_biplot(C_pca,
+                           col.ind = groups_c,#color by groups
+                           palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                           legend.title = "Crops",
+                           repel = TRUE)+
+  labs(title= "Variables affecting the differentiation of the crops - PCA",
+    caption= "Graph 12: PCA disriminating different variables as vectors that differentiate the crops.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAvariables
+
+#Opposite direction arrows indicate negative correlations between the variables
+```
+
+PCA for each crop (dif colors), discriminating treatments with names.
+
+The x axis (Dim1) separates very nicely the crops from each other, clearly differentiating the three crops from each other, based on the differences among their individuals.
+
+```{r, message = FALSE, warning = FALSE, include=FALSE}
+D1 <- D_GH [, 3:11]
+
+rownames(D1) <- paste0(D_GH$Cropname, D_GH$Name)
+T_pca <- prcomp(D1, scale = TRUE)
+factoextra::fviz_pca_ind(T_pca,
+                         col.ind = groups_c,
+                         palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         addEllipses = TRUE, # Concentration ellipses
+                         ellipse.type = "confidence",
+                         legend.title = "Treatments",
+                         repel = TRUE
+)
+
+#PCA1 written formula
+T_pca$rotation
+formula1 <- "PC1 = "
+a <-  as.data.frame(T_pca$rotation)
+for (i in 1:length(a$PC1)) {
+  if (a$PC1[i] >= 0) formula1 <- paste(formula1, "+") 
+  formula1 <- paste(formula1, a$PC1[i], rownames(a)[i])
+}
+  
+```
+
+PCA labeled according to the strains, to reveal if there is some grouping by the strains.
+```{r}
+groups_t <- as.factor(D_GH$`Treatments (strains)`)
+PCAstrains <- factoextra::fviz_pca_ind(C_pca,geom ="point",
+                         col.ind = groups_t, # color by groups
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         #addEllipses = TRUE, # Concentration ellipses
+                         #ellipse.type = "confidence",
+                         legend.title = "Strains",
+                         repel = FALSE)+
+  labs(title= "Strains distribution in the different groups - PCA",
+    caption= "Graph 13: PCA showing how different strains are distributed among the groups.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAstrains
+```
+
+Since the differentiation is mainly on the crop type, a deeper analysis is done within each crop.
+
+### Bean PCA
+```{r PCA variable Beans, message = FALSE, warning = FALSE}
+D_GHb<- D_GH[,c(3:13)]
+D_GHb <- D_GHb[D_GHb$Cropname == "Bean",]
+Name <- D_GHb$Name
+D_GHb <- D_GHb [1:9]
+rownames(D_GHb)<-Name
+B_pca <- prcomp(D_GHb, scale = TRUE)
+factoextra::fviz_pca_ind(B_pca,
+                         geom = c("point", "text"),
+                         #col.ind = groups_t,
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         addEllipses = TRUE, # Concentration ellipses
+                         ellipse.type = "confidence",
+                         #legend.title = "Treatments",
+                         repel = FALSE)
+```
+
+```{r}
+PCAbean <- factoextra::fviz_pca_var(B_pca,
+                         col.var = "contrib", # Color by contributions to the PC
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE)+
+  labs(title= "Variables affecting Bean - PCA",
+    caption= "Graph 14: PCA disriminating different variables as vectors within the bean variables. Colours show the contribution of each variable.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAbean
+```
+
+### Maize PCA
+```{r, message = FALSE, warning = FALSE}
+D_GHm<- D_GH[,c(3:13)]
+D_GHm <- D_GHm[D_GHm$Cropname == "Maize",]
+Name <- D_GHm$Name
+D_GHm <- D_GHm [1:9]
+rownames(D_GHm)<-Name
+M_pca <- prcomp(D_GHm, scale = TRUE)
+factoextra::fviz_pca_ind(M_pca,
+                         geom = c("point", "text"),
+                         #col.ind = groups_t,
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         #addEllipses = TRUE, # Concentration ellipses
+                         #ellipse.type = "confidence",
+                         #legend.title = "Treatments",
+                         repel = FALSE)
+```
+
+```{r}
+
+PCAmaize <- factoextra::fviz_pca_var(M_pca,
+                         col.var = "contrib", # Color by contributions to the PC
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE)+
+  labs(title= "Variables affecting Maize - PCA",
+    caption= "Graph 16: PCA disriminating different variables as vectors within the maize variables. Colours show the contribution of each variable.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAmaize
+```
+
+### Soybean PCA
+```{r, message = FALSE, warning = FALSE}
+D_GHs<- D_GH[,c(3:13)]
+D_GHs<- D_GHs[D_GHs$Cropname == "Soybean",]
+Name <- D_GHs$Name
+D_GHs <- D_GHs [1:9]
+rownames(D_GHs)<-Name
+S_pca <- prcomp(D_GHs, scale = TRUE)
+factoextra::fviz_pca_ind(S_pca,
+                         geom = c("point", "text"),
+                         #col.ind = groups_t,
+                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
+                         #addEllipses = TRUE, # Concentration ellipses
+                         #ellipse.type = "confidence",
+                         #legend.title = "Treatments",
+                         repel = FALSE)
+```
+
+```{r}
+PCAsoy <- factoextra::fviz_pca_var(S_pca,
+                         col.var = "contrib", # Color by contributions to the PC
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE)+
+  labs(title= "Variables affecting Soybean - PCA",
+    caption= "Graph 17: PCA disriminating different variables as vectors within the soybean variables. Colours show the contribution of each variable.")+
+  theme(plot.caption = (element_text(hjust = 0)))
+PCAsoy
+```
+
+### PCA results:
+
+Strains are not separated even when a PCA for each crop is done. However, height and dry mass seem to be the parameters that separate the strains the most in all crops.
+## Discriminant analysis
+```{r}
+Bean.lda <- lda(D_Bean$`Treatments (strains)`~D_Bean$`Plant high (Mean - cm)` +
+                  D_Bean$`Shoot dry mass (g)` +
+                  D_Bean$`Root dry mass (g)`+ 
+                  D_Bean$`Total dry mass (g)` + 
+                  D_Bean$`P Soil (mg/dm3)` + 
+                  D_Bean$`P Shoot g/kg`+ 
+                  D_Bean$`P Roots g/kg` + 
+                  D_Bean$`N Shoot g/kg` + 
+                  D_Bean$`N Roots g/kg`
+                  )
+Bean.lda.values <- predict(Bean.lda, D_Bean[3:11])
+newdata <- data.frame(type = D_Bean[,1], lda = Bean.lda.values$x)
+ggplot(newdata) + geom_point(aes(lda.LD1, lda.LD2, colour = Treatments..strains.), size = 2.5)
+```
+
+## Strain re-evaluation method
+
+A similar process has been followed to identify the most optimal strains in the greenhouse experiments. First an ANOVA has been done, taking into account all the different assumptions. Then, for those cases in which ANOVA is not possible, the Kruskal-Wallis' test has been done. For the rest of the cases, Duncan's test was carried out to assess the different grouping options. 
 
 ### ANOVA 
 The greenhouse results are tested in order to find out the effect of the selected strains. First of all, in order to address significant differences, an ANOVA test has been carried out. 
@@ -324,6 +537,8 @@ shapiro.test(anovasoy11$residuals)
 The homoscedaticity is also a requirement in order to approve the results of the ANOVA. It has been tested using the Breusch-Pagan test: 
 
 ```{r Homoscedaticity,message = FALSE, warning = FALSE, results="hide"}
+#This function does not accept the $residuals, but since it takes the whole ANOVA result, it is assumed that the residuals are included in the code. 
+
 #BEAN
 bptest(anovabean3)
 bptest(anovabean4)
@@ -438,7 +653,7 @@ kruskalmaize9
 
 ```
 
-The variables who satisfy all the requirements for ANOVA can be tested with Tukey's or Duncan's tests in order to form groups that show the performance of the inoculation experiments in the greenhouse. Once again, Tukey test was carried out, but when  the low sensibility of the results observed (most of the strains were in the same group, without noticing any difference), Duncan's test was proposed as an alternative, providing more diverse grouping. 
+The variables who satisfy all the requirements for ANOVA can be tested with Tukey's or Duncan's tests in order to form groups that show the performance of the inoculation experiments in the greenhouse. Once again, Tukey test was carried out, but when the low sensitivity of the results was observed (most of the strains were in the same group, without noticing any difference), Duncan's test was done as an alternative, providing more diverse grouping. 
 
 ```{r Tukey, message = FALSE, warning = FALSE, results="hide"}
 
@@ -529,7 +744,7 @@ Duncan.Maize11 <- duncan.test(anovamaize11,"D_Maize[[1]]")
 Duncan.Maize11$groups
 ```
 
-## Strain evaluation results
+## Strain re-evaluation results
 
 As a summary of the results obtained in this process, tables 2, 3 and 4 display the different variables measured and the most optimal strain according to the most appropriate test. 
 
@@ -740,7 +955,7 @@ Splot_Pshoot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Shoot g/kg`, fi
   labs(fill = "Strain groups") +
   xlab('Strain') +
   ylab('Mean P solubilized in shoot (g/kg)')+
-  labs(title = "[P] in shoot in Maize",
+  labs(title = "[P] in shoot in Soybean",
     caption= "Graph 10: Mean P solubilized in soybean's shoot. Groups made by Kruskal-Wallis' test.")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0))
@@ -761,208 +976,11 @@ Splot_Proot <- ggplot(D_Soy, aes(x=`Treatments (strains)`, y=`P Roots g/kg`, fil
 Splot_Proot  
 ```
 
+## Discussion
 
-## PCA
-Principal Components Analysis was done in order to test if in a driven analysis, where the different groups are defined by the researcher previously according to a specific criterion, in this case the different crops and strains, differences in the performance can be observed. 
-
-For this project, the package ```factoextra``` is used to carry out the PCA.
-```{r General PCA, message = FALSE, warning = FALSE, include=FALSE}
-#Adding column for individual identification of points based on the treatment
-D_GH$Name <- paste(D_GH$`Treatments (strains)`,"_",D_GH$`Repetition (pots)`)
-      #eliminate this name column
-
-#Data for PCA 
-#D_PCA <- D_GH [-2]
-#D_PCA <- D_GH [3:11]
-#data (D_GH)
-
-#General PCA
-C_pca <- prcomp(D_GH [3:11], scale = TRUE)
-factoextra::fviz_eig(C_pca)
-factoextra::fviz_pca_ind(C_pca,
-             col.ind = "cos2", # Color by the quality of representation
-             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-             repel = TRUE     # Avoid text overlapping
-)
-```
-
-### Crops PCA
-PCA differentiated by crops:
-```{r PCA crops}
-#PCA with colored crops
-groups_c <- as.factor(D_GH$Cropname)
-PCAcrops <- factoextra::fviz_pca_ind(C_pca,
-             col.ind = groups_c, # color by groups
-             palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-             addEllipses = TRUE, # Concentration ellipses
-             ellipse.type = "confidence",
-             legend.title = "Crops",
-             repel = TRUE)+
-  labs(caption= "Graph 12: PCA on the individuals, with the crops shown in different colors.")+
-  theme(plot.caption = (element_text(hjust = 0)))
-PCAcrops
-
-```
-
-The x axis (Dim1) separates very nicely the crops from each other, clearly differentiating the three crops from each other, based on the differences among their individuals.
+## Conclussion
 
 
 
-```{r Variables PCA}
-PCAvariables <- factoextra::fviz_pca_biplot(C_pca,
-                           col.ind = groups_c,#color by groups
-                           palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-                           addEllipses = TRUE, # Concentration ellipses
-                           ellipse.type = "confidence",
-                           legend.title = "Crops",
-                           repel = TRUE)+
-  labs(title= "Variables affecting the differentiation of the crops - PCA",
-    caption= "Graph 13: PCA disriminating different variables as vectors that differentiate the crops.")+
-  theme(plot.caption = (element_text(hjust = 0)))
-PCAvariables
 
-#Opposite direction arrows indicate negative correlations between the variables
-```
-PCA for each crop (dif colors), discriminating treatments with names
 
-```{r, message = FALSE, warning = FALSE, include=FALSE}
-D1 <- D_GH [, 3:11]
-
-rownames(D1) <- paste0(D_GH$Cropname, D_GH$Name)
-T_pca <- prcomp(D1, scale = TRUE)
-factoextra::fviz_pca_ind(T_pca,
-                         col.ind = groups_c,
-                         palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-                         addEllipses = TRUE, # Concentration ellipses
-                         ellipse.type = "confidence",
-                         legend.title = "Treatments",
-                         repel = TRUE
-)
-
-#PCA1 written formula
-T_pca$rotation
-formula1 <- "PC1 = "
-a <-  as.data.frame(T_pca$rotation)
-for (i in 1:length(a$PC1)) {
-  if (a$PC1[i] >= 0) formula1 <- paste(formula1, "+") 
-  formula1 <- paste(formula1, a$PC1[i], rownames(a)[i])
-}
-  
-```
-
-PCA labbed according to the strains, to reveal if there is some grouping by the strains.
-```{r}
-groups_t <- as.factor(D_GH$`Treatments (strains)`)
-PCAstrains <- factoextra::fviz_pca_ind(C_pca,geom ="point",
-                         col.ind = groups_t, # color by groups
-                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-                         #addEllipses = TRUE, # Concentration ellipses
-                         #ellipse.type = "confidence",
-                         legend.title = "Strains",
-                         repel = FALSE)+
-  labs(title= "Strains distribution in the different groups - PCA",
-    caption= "Graph 14: PCA showing how different strains are distributed among the groups.")+
-  theme(plot.caption = (element_text(hjust = 0)))
-PCAstrains
-```
-
-Since a differentiation of the strain is not clear considering all the crops at once, a PCA for every crop will be made.
-
-### Bean PCA
-```{r PCA variable Beans, message = FALSE, warning = FALSE, include=FALSE}
-D_GHb<- D_GH[,c(3:13)]
-D_GHb <- D_GHb[D_GHb$Cropname == "Bean",]
-Name <- D_GHb$Name
-D_GHb <- D_GHb [1:9]
-rownames(D_GHb)<-Name
-B_pca <- prcomp(D_GHb, scale = TRUE)
-factoextra::fviz_pca_ind(B_pca,
-                         geom = c("point", "text"),
-                         #col.ind = groups_t,
-                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-                         addEllipses = TRUE, # Concentration ellipses
-                         ellipse.type = "confidence",
-                         #legend.title = "Treatments",
-                         repel = FALSE)
-```
-
-```{r}
-PCAbean <- factoextra::fviz_pca_var(B_pca,
-                         col.var = "contrib", # Color by contributions to the PC
-                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                         repel = TRUE)+
-  labs(title= "Variables affecting Bean - PCA",
-    caption= "Graph 15: PCA disriminating different variables as vectors within the bean variables. Colours show the contribution of each variable.")+
-  theme(plot.caption = (element_text(hjust = 0)))
-PCAbean
-```
-
-### Maize PCA
-```{r, message = FALSE, warning = FALSE, include=FALSE}
-D_GHm<- D_GH[,c(3:13)]
-D_GHm <- D_GHm[D_GHm$Cropname == "Maize",]
-Name <- D_GHm$Name
-D_GHm <- D_GHm [1:9]
-rownames(D_GHm)<-Name
-M_pca <- prcomp(D_GHm, scale = TRUE)
-factoextra::fviz_pca_ind(M_pca,
-                         geom = c("point", "text"),
-                         #col.ind = groups_t,
-                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-                         #addEllipses = TRUE, # Concentration ellipses
-                         #ellipse.type = "confidence",
-                         #legend.title = "Treatments",
-                         repel = FALSE)
-```
-
-```{r}
-
-PCAmaize <- factoextra::fviz_pca_var(M_pca,
-                         col.var = "contrib", # Color by contributions to the PC
-                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                         repel = TRUE)+
-  labs(title= "Variables affecting Maize - PCA",
-    caption= "Graph 16: PCA disriminating different variables as vectors within the maize variables. Colours show the contribution of each variable.")+
-  theme(plot.caption = (element_text(hjust = 0)))
-PCAmaize
-```
-
-### Soybean PCA
-```{r, message = FALSE, warning = FALSE, include=FALSE}
-D_GHs<- D_GH[,c(3:13)]
-D_GHs<- D_GHs[D_GHs$Cropname == "Soybean",]
-Name <- D_GHs$Name
-D_GHs <- D_GHs [1:9]
-rownames(D_GHs)<-Name
-S_pca <- prcomp(D_GHs, scale = TRUE)
-factoextra::fviz_pca_ind(S_pca,
-                         geom = c("point", "text"),
-                         #col.ind = groups_t,
-                         #palette = c("#00AFBB", "#E7B800", "#FC4E07", "#FF0066"),
-                         #addEllipses = TRUE, # Concentration ellipses
-                         #ellipse.type = "confidence",
-                         #legend.title = "Treatments",
-                         repel = FALSE)
-```
-
-```{r}
-PCAsoy <- factoextra::fviz_pca_var(S_pca,
-                         col.var = "contrib", # Color by contributions to the PC
-                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                         repel = TRUE)+
-  labs(title= "Variables affecting Soybean - PCA",
-    caption= "Graph 17: PCA disriminating different variables as vectors within the soybean variables. Colours show the contribution of each variable.")+
-  theme(plot.caption = (element_text(hjust = 0)))
-PCAsoy
-```
-
-### PCA results:
-
-Strains are not separated even when a PCA for each crop is done. However, height and dry mass seem to be the parameters that separate the strains the most in all crops.
-
-## Moderator analysis
-
-## Discriminant analysis
-
-**Maize** is more affected by strains LSM 65 in the Plant Height and Shoot dry mas, LSM 24 in the P soil and P shoot, and both of them , LSM 65 and 24, have similar effects in the N root
->>>>>>> 91c55e4d66c4c5923c372adb8ea37a7d2db4af95
