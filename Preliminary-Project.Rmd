@@ -176,7 +176,7 @@ D_IAA$names <- paste0("LSM_", D_IAA$LSM_strain ) #Add column with strain name
 kr <- agricolae::kruskal(D_IAA[2], D_IAA[3], alpha = 0.05, p.adj ="holm", group=TRUE)
 ```
 
-```{r K-W plot  out.width= "170%", fig.cap = "Graph 1: Indolacetic acid concentrations Holms groups (microgram per gram of dried micelium)}
+```{r K-W plot,  out.width= "170%", fig.cap = "Graph 1: Indolacetic acid concentrations Holms groups (microgram per gram of dried micelium)"}
 cp <- colorRampPalette(c ("navy", "lightskyblue", "orange", "maroon1")) #Color palette
 dev.new (width=17, height= 5)
 plot.new()
@@ -254,7 +254,6 @@ dev.new (width=17, height= 5)
 plot.new()
 plot(T_P, main = "Solubilized P concentrations per strain (Tukey)", xlab = "Strain", ylab = "Solubilized P (microg/g)", col = cp1(5), las = 2, cex = 0.8, cex.axis=0.7, cex.names=0.6)
 
->>>>>>> 1627324ff90f0af2f3d5eabb11e0fd7d141fe2d8
 
 ```
 As seen in the Duncan's test, only the strain 24 highlights from the group. The rest of them slowly decrease in solubilized P production. This analysis does not provide enough resolution to choose those strains with a better potential performance. The autors of the article chose the first 3, belonging to the a, ab and abc groups: LSM 24, 65 and 14, in order. 
@@ -999,16 +998,55 @@ Splot_Proot
 
 ## Discussion
 
-## Conclussion
-<<<<<<< HEAD
+Important discrepancies have been found between the analysis carried out in this project and the one done by the authors: 
+
+**Bean:** The paper mentioned there isn't any significance difference in P levels in Roots. We found otherwise.
+
+**Soy:** The original work mentioned that there is significance difference in root and total dry mass, however our analysis showed no significant difference.
+
+Moreover, the paper mentioned no significant difference in P levels, when in fact there has been.
+
+Also, the use of barplots in order to display the graphs is unadvised. Instead, boxplots are recommended to show the performance of each strain in each parameter. This plots are better for displaying quantitative data, because they deal with medians, quartiles, and information related to actual quantities. Barplots are used for displaying categorical/qualitative data because they deal with counts.
 
 
+```{r SUmmary Table}
+newvar.name.bean <- c("Plant Height", "Shoot dry mass", "Root dry mass", "Total dry mass", "P soil", "P shoot", "P root", "N shoot", "N root")
+newstrain.bean <-  c(strain.bean)
+newstrain.maize <- c(strain.maize)
+newstrain.soy <-  c(strain.soy)
+
+newtable <- data.frame(newvar.name.bean, newstrain.bean, newstrain.maize, newstrain.soy) 
+
+newtable<- newtable%>% 
+  rename("Variable" = newvar.name.bean,
+         "Bean"= newstrain.bean,
+         "Maize"= newstrain.maize,
+         "Soybean" = newstrain.soy)
+kbl(newtable)%>%
+  kable_styling(full_width = F) %>% 
+  footnote(general = "Table 5: Summary table of all the optimal strains of the three different crops.", general_title = "")
+  
+```
 
 
-=======
+## Conclusion
 
+### In terms of crops:
 
+**Bean:** Significant differences in P levels in Shoot and in Root however in parameters like the plant height in P levels in soil, the control was better than any of the strains.
 
+**Maize:** Significant differences in almost all parameters.
 
->>>>>>> 1627324ff90f0af2f3d5eabb11e0fd7d141fe2d8
+**Soybean:** Significant differences in plant height, & P levels in root.
+
+### Interms of strains
+
+Strains 24 and 65 seem to have the highest effect on Maize crops.
+
+As for Bean and Soybean strains 183, 179 and 14 have the highest effect (only on a couple of parameters)
+
+### In terms of parameters: 
+
+No strains showed any positive change on the parameter of the Root dry mass, if anything strains reduced the root dry mass in the Maize crop.
+
 
