@@ -766,7 +766,7 @@ Tukey.Maize11=HSD.test(anovamaize11,"D_Maize[[1]]", group=TRUE, alpha=0.05)
 Tukey.Maize11$groups
 
 ```
-
+ 
 ```{r Duncan, message = FALSE, warning = FALSE, results="hide" }
 
 Duncan.Soy3 <- duncan.test(anovasoy3,"D_Soy[[1]]")
